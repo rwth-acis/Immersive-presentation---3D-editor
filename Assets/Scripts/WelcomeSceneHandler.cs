@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
+using System;
 
 public class WelcomeSceneHandler : MonoBehaviour
 {
@@ -20,6 +22,20 @@ public class WelcomeSceneHandler : MonoBehaviour
 
         welcomeWindow.SetActive(false);
         selectionWindow.SetActive(true);
+
+        //Real API Call
+
+        BackendConnection.BC.Login(LoginSucceed, LoginFailed);
+    }
+
+    private void LoginSucceed(LoginResponse response)
+    {
+        print("Succeed");
+    }
+
+    private void LoginFailed(string msg)
+    {
+        print("Failed");
     }
 
     public void OpenPresentation()
