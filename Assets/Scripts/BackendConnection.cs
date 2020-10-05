@@ -12,16 +12,15 @@ public class BackendConnection : MonoBehaviour
 
     private string baseurl = "http://binarybros.de";
 
-    public void Login(UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    public void Login(string email, string pwd, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
-        StartCoroutine(MakeLoginRequest(callbackOnSuccess, callbackOnFail));
+        StartCoroutine(MakeLoginRequest(email, pwd, callbackOnSuccess, callbackOnFail));
     }
-    IEnumerator MakeLoginRequest(UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    IEnumerator MakeLoginRequest(string email, string pwd, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
-        print("Hallo Login");
         WWWForm form = new WWWForm();
-        form.AddField("email", "lukaslisswitten@gmail.com");
-        form.AddField("password", "MyTopPWD!");
+        form.AddField("email", email);
+        form.AddField("password", pwd);
         UnityWebRequest request = UnityWebRequest.Post(baseurl + "/auth/login", form);
         yield return request.SendWebRequest();
 

@@ -10,32 +10,30 @@ using System;
 
 public class WelcomeSceneHandler : MonoBehaviour
 {
-    public TextMeshProUGUI email;
+    public TMP_InputField email;
     public TMP_InputField password;
+    public TextMeshProUGUI errorText;
     public GameObject welcomeWindow;
     public GameObject selectionWindow;
 
     public void Login()
     {
-        print(email.text);
-        print(password.text);
-
-        welcomeWindow.SetActive(false);
-        selectionWindow.SetActive(true);
-
-        //Real API Call
-
-        BackendConnection.BC.Login(LoginSucceed, LoginFailed);
+        string emailString = email.text.Replace("\u200B", "");
+        string passwordString = password.text.Replace("\u200B", "");
+        BackendConnection.BC.Login(emailString, passwordString, LoginSucceed, LoginFailed);
     }
 
     private void LoginSucceed(LoginResponse response)
     {
-        print("Succeed");
+        print("Login Succeed");
+        welcomeWindow.SetActive(false);
+        selectionWindow.SetActive(true);
     }
 
     private void LoginFailed(string msg)
     {
-        print("Failed");
+        print("Login Failed");
+        errorText.text = "Login failed. Please check your credentials.";
     }
 
     public void OpenPresentation()
