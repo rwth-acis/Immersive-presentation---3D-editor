@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class WelcomeSceneHandler : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     public GameObject ScrollObjectCollectionPresButtons;
     public GameObject PresListButtonPrefab;
+    public int objectsPerFrame = 5;
 
     public void Login()
     {
@@ -44,22 +46,13 @@ public class WelcomeSceneHandler : MonoBehaviour
     private void LoadListSucceed(ListResponse response)
     {
         print("Get presentation list successfull");
-        //show buttons for all owned presentations
-        ScrollingObjectCollection scrollObjectCollection = ScrollObjectCollectionPresButtons.GetComponent<ScrollingObjectCollection>();
-        foreach (PresentationElement pres in response.presentations)
-        {
-            print(pres.name);
-            GameObject g = Instantiate(PresListButtonPrefab);
-            g.transform.parent = scrollObjectCollection.transform;
-            PresListButtonScript btnScript = g.GetComponent<PresListButtonScript>();
-            btnScript.pres = pres;
-            btnScript.showNameOfPres = selectedPresText;
-        }
-        scrollObjectCollection.UpdateCollection();
 
         //Switch to selection window state
         welcomeWindow.SetActive(false);
         selectionWindow.SetActive(true);
+
+        //Start lazy loading
+        StartCoroutine(CreateListLazy(response.presentations, objectsPerFrame));
     }
 
     private void LoadListFailed(string msg)
@@ -68,8 +61,44 @@ public class WelcomeSceneHandler : MonoBehaviour
         errorText.text = "Logged in but fetching presentations failed.";
     }
 
+    private IEnumerator CreateListLazy(List<PresentationElement> presList, int instancesPerFrame)
+    {
+        int currentIndex = 0;
+
+        ScrollingObjectCollection scrollObjectCollection = ScrollObjectCollectionPresButtons.GetComponent<ScrollingObjectCollection>();
+        while (currentIndex < presList.Count)
+        {
+            for (int i = currentIndex; i < Math.Min(currentIndex + instancesPerFrame, presList.Count); i++)
+            {
+                PresentationElement pres = presList[i];
+                //Create the Button
+                GameObject g = Instantiate(PresListButtonPrefab);
+                g.transform.parent = scrollObjectCollection.transform;
+                g.transform.localScale = new Vector3(1, 1, 1);
+                PresListButtonScript btnScript = g.GetComponent<PresListButtonScript>();
+                btnScript.pres = pres;
+                btnScript.showNameOfPres = selectedPresText;
+                ButtonConfigHelper btnConfigHelper = g.GetComponent<ButtonConfigHelper>();
+                btnConfigHelper.OnClick.AddListener(delegate { btnScript.Click(pres); });
+
+                currentIndex++;
+            }
+
+            yield return null;
+        }
+
+        // List is ready to show
+        GameObject loadingVizualiser = GameObject.Find("PresListLoadingIndicator");
+        loadingVizualiser.SetActive(false);
+        ScrollObjectCollectionPresButtons.SetActive(true);
+
+        scrollObjectCollection.UpdateCollection();
+    }
+
     public void OpenPresentation()
     {
+        if (StaticInformation.selectedPresElem == null) return;
+
         SceneManager.LoadScene("Scenes/EditorScene");
     }
 }

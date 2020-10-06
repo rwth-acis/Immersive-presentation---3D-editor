@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,6 +64,34 @@ public class BackendConnection : MonoBehaviour
         {
             ListResponse output = JsonConvert.DeserializeObject<ListResponse>(request.downloadHandler.text);
             callbackOnSuccess?.Invoke(output);
+        }
+    }
+
+    /// <summary>
+    /// Downloads the presentation file from the backend coordinator
+    /// </summary>
+    /// <param name="id">Identifier of the presentation</param>
+    /// <param name="path">Locatio where the presentation file should be saved</param>
+    /// <param name="callbackOnSuccess">Callback that is called when download succeeded</param>
+    /// <param name="callbackOnFail">Callback that is called when download failed</param>
+    public void DownloadPresentation(string id, string path, UnityAction<string> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeDownloadPresentation(id, path, callbackOnSuccess, callbackOnFail));
+    }
+
+    IEnumerator MakeDownloadPresentation(string id, string path, UnityAction<string> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(baseurl + string.Format("/presentation/foreditor?idpresentation={0}", Uri.EscapeDataString(id)));
+        request.SetRequestHeader("Authorization", "Bearer " + token);
+        request.downloadHandler = new DownloadHandlerFile(path);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            callbackOnSuccess?.Invoke(path);
         }
     }
 

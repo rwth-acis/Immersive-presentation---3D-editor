@@ -2,8 +2,6 @@
 
 public static class StaticInformation
 {
-    
-
     /// <summary>
     /// The presentation that is selected at the moment
     /// </summary>

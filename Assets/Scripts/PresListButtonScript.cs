@@ -30,13 +30,13 @@ public class PresListButtonScript : MonoBehaviour
     /// </summary>
     public TextMeshProUGUI showNameOfPres;
 
-    public void Click()
+    public void Click(PresentationElement pPres)
     {
-        if (pres == null) {
+        if (pPres == null) {
             showNameOfPres.text = "Please select another presentation";
             return;
         }
-        showNameOfPres.text = pres.name;
-        StaticInformation.selectedPresElem = pres;
+        showNameOfPres.text = pPres.name;
+        StaticInformation.selectedPresElem = pPres;
     }
 }
