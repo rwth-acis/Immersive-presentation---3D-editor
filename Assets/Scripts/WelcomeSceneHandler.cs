@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
 
 public class WelcomeSceneHandler : MonoBehaviour
 {
@@ -15,6 +16,11 @@ public class WelcomeSceneHandler : MonoBehaviour
     public TextMeshProUGUI errorText;
     public GameObject welcomeWindow;
     public GameObject selectionWindow;
+
+    public TextMeshProUGUI selectedPresText;
+
+    public GameObject ScrollObjectCollectionPresButtons;
+    public GameObject PresListButtonPrefab;
 
     public void Login()
     {
@@ -39,10 +45,17 @@ public class WelcomeSceneHandler : MonoBehaviour
     {
         print("Get presentation list successfull");
         //show buttons for all owned presentations
-        foreach(PresentationElement pres in response.presentations)
+        ScrollingObjectCollection scrollObjectCollection = ScrollObjectCollectionPresButtons.GetComponent<ScrollingObjectCollection>();
+        foreach (PresentationElement pres in response.presentations)
         {
             print(pres.name);
+            GameObject g = Instantiate(PresListButtonPrefab);
+            g.transform.parent = scrollObjectCollection.transform;
+            PresListButtonScript btnScript = g.GetComponent<PresListButtonScript>();
+            btnScript.pres = pres;
+            btnScript.showNameOfPres = selectedPresText;
         }
+        scrollObjectCollection.UpdateCollection();
 
         //Switch to selection window state
         welcomeWindow.SetActive(false);
@@ -57,7 +70,6 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     public void OpenPresentation()
     {
-        StaticInformation.SelectedPresName = "TestPresName";
         SceneManager.LoadScene("Scenes/EditorScene");
     }
 }
