@@ -8,7 +8,7 @@ using UnityEngine;
 public class EditorSceneHandler : MonoBehaviour
 {
     public string tempDirBase { get; set; } //Path to the start of the temporary folder of the actual windows user 
-    public const string tempDownloadSuffix = "ImPres\\downloads\\";
+    public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
     public string tempDownloadDir
     {
         get
@@ -17,7 +17,7 @@ public class EditorSceneHandler : MonoBehaviour
         }
     } //Path where the presentations are downloaded to.
 
-    public const string tempSuffix = "ImPres\\presentation\\";
+    public const string tempSuffix = "ImPres3D\\presentation\\";
     public string tempPresDir
     {
         get
@@ -31,7 +31,7 @@ public class EditorSceneHandler : MonoBehaviour
     public const string tempSubSubScene = "Scene\\";
     public const string tempSubSubHandout = "Handout\\";
 
-    public const string tempSaveSuffix = "ImPres\\save\\";
+    public const string tempSaveSuffix = "ImPres3D\\save\\";
     public string tempSaveDir
     {
         get
@@ -78,6 +78,7 @@ public class EditorSceneHandler : MonoBehaviour
 
         loadPresentation(path);
         print(openPresentation.name);
+        print(tempDirBase);
     }
 
     /// <summary>

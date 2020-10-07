@@ -89,7 +89,10 @@ public class WelcomeSceneHandler : MonoBehaviour
 
         // List is ready to show
         GameObject loadingVizualiser = GameObject.Find("PresListLoadingIndicator");
-        loadingVizualiser.SetActive(false);
+        if(loadingVizualiser != null)
+        {
+            loadingVizualiser.SetActive(false);
+        }
         ScrollObjectCollectionPresButtons.SetActive(true);
 
         scrollObjectCollection.UpdateCollection();
