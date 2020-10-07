@@ -5,6 +5,9 @@ using System.IO;
 using System.IO.Compression;
 using UnityEngine;
 using ImmersivePresentation;
+using System;
+using i5.Toolkit.Core.ServiceCore;
+using i5.Toolkit.Core.ModelImporters;
 
 public class EditorSceneHandler : MonoBehaviour
 {
@@ -41,10 +44,13 @@ public class EditorSceneHandler : MonoBehaviour
         }
     } //Path where the presentation is saved before uploading.
 
+    
+
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
     Presentation openPresentation;
+    List<GameObject> actualSceneGameObjList;
 
     // Start is called before the first frame update
     void Start()
@@ -80,6 +86,9 @@ public class EditorSceneHandler : MonoBehaviour
         loadPresentation(path);
         print(openPresentation.name);
         print(tempDirBase);
+        //import all Gameobjects from the presentation
+        actualSceneGameObjList = new List<GameObject>();
+        create3DObjectsFromScene(openPresentation.stages[0].scene, actualSceneGameObjList);
     }
 
     /// <summary>
@@ -151,5 +160,20 @@ public class EditorSceneHandler : MonoBehaviour
         createCleanDirectory(tempPresDir + tempSub3D);
         createCleanDirectory(tempPresDir + tempSub3D + tempSubSubScene);
         createCleanDirectory(tempPresDir + tempSub3D + tempSubSubHandout);
+    }
+
+    /// <summary>
+    /// Loads all the 3D elements that are in the scence into the unity scene
+    /// </summary>
+    /// <param name="pScene">The scene of the presentation</param>
+    /// <param name="pSceneGameObjList">A List where all the created Gameobjects are stored</param>
+    private async void create3DObjectsFromScene(ImmersivePresentation.Scene pScene, List<GameObject> pSceneGameObjList)
+    {
+        for (int i = 0; i < pScene.elements.Count; i++)
+        {
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(tempPresDir + pScene.elements[i].relativePath);
+            pSceneGameObjList.Add(obj);
+            print("imported obj: " + i);
+        }
     }
 }
