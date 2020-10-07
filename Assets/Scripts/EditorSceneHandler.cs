@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using UnityEngine;
+using ImmersivePresentation;
 
 public class EditorSceneHandler : MonoBehaviour
 {
