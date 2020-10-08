@@ -44,7 +44,10 @@ public class EditorSceneHandler : MonoBehaviour
         }
     } //Path where the presentation is saved before uploading.
 
-    
+    /// <summary>
+    /// The Gameobject that serves as the anchor for the scene
+    /// </summary>
+    public GameObject anchor;
 
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -88,6 +91,12 @@ public class EditorSceneHandler : MonoBehaviour
         print(tempDirBase);
         //import all Gameobjects from the presentation
         actualSceneGameObjList = new List<GameObject>();
+        if(openPresentation.stages == null || openPresentation.stages.Count == 0)
+        {
+            //Show error that no stage is given
+            print("No stage in the opened presentation.");
+            return;
+        } 
         create3DObjectsFromScene(openPresentation.stages[0].scene, actualSceneGameObjList);
     }
 
@@ -171,9 +180,14 @@ public class EditorSceneHandler : MonoBehaviour
     {
         for (int i = 0; i < pScene.elements.Count; i++)
         {
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(tempPresDir + pScene.elements[i].relativePath);
+            Element3D curElement = pScene.elements[i];
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(tempPresDir + curElement.relativePath);
+            obj.transform.parent = anchor.transform;
+            obj.transform.localPosition = new Vector3(0, (0.5f + i), 0);
+            obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            obj.transform.Rotate(0f, 0f, 90f, Space.Self);
             pSceneGameObjList.Add(obj);
-            print("imported obj: " + i);
+            print("imported obj with id: " + i);
         }
     }
 }
