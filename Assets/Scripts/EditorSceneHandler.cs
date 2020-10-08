@@ -49,6 +49,11 @@ public class EditorSceneHandler : MonoBehaviour
     /// </summary>
     public GameObject anchor;
 
+    /// <summary>
+    /// The loading indicator that will be removed 
+    /// </summary>
+    public GameObject loadingVisualizer;
+
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
@@ -98,6 +103,7 @@ public class EditorSceneHandler : MonoBehaviour
             return;
         } 
         create3DObjectsFromScene(openPresentation.stages[0].scene, actualSceneGameObjList);
+        loadingVisualizer.SetActive(false);
     }
 
     /// <summary>
@@ -183,9 +189,9 @@ public class EditorSceneHandler : MonoBehaviour
             Element3D curElement = pScene.elements[i];
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(tempPresDir + curElement.relativePath);
             obj.transform.parent = anchor.transform;
-            obj.transform.localPosition = new Vector3(0, (0.5f + i), 0);
-            obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            obj.transform.Rotate(0f, 0f, 90f, Space.Self);
+            obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
+            obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
+            obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
             pSceneGameObjList.Add(obj);
             print("imported obj with id: " + i);
         }
