@@ -2858,6 +2858,101 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1001 &643823887
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_Name
+      value: LoginLoadingIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.109
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.091
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.2453
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5303487442624465837, guid: 9c4ddc0ec93e1df449e9984dca497355,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9c4ddc0ec93e1df449e9984dca497355, type: 3}
+--- !u!1 &643823888 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
+    type: 3}
+  m_PrefabInstance: {fileID: 643823887}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &650780707
 GameObject:
   m_ObjectHideFlags: 0
@@ -9452,6 +9547,7 @@ MonoBehaviour:
   welcomeWindow: {fileID: 330326995}
   selectionWindow: {fileID: 356803196}
   selectedPresText: {fileID: 650780709}
+  LoginLoader: {fileID: 643823888}
   ScrollObjectCollectionPresButtons: {fileID: 1898410693}
   PresListButtonPrefab: {fileID: 6067342714973020960, guid: de4d51fd2cb62914c9af95a561b1210a,
     type: 3}

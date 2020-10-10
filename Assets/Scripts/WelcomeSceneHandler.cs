@@ -20,6 +20,8 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     public TextMeshProUGUI selectedPresText;
 
+    public GameObject LoginLoader;
+
     public GameObject ScrollObjectCollectionPresButtons;
     public GameObject PresListButtonPrefab;
     public int objectsPerFrame = 5;
@@ -28,6 +30,7 @@ public class WelcomeSceneHandler : MonoBehaviour
     {
         string emailString = email.text.Replace("\u200B", "");
         string passwordString = password.text.Replace("\u200B", "");
+        LoginLoader.SetActive(true);
         BackendConnection.BC.Login(emailString, passwordString, LoginSucceed, LoginFailed);
     }
 
@@ -48,6 +51,7 @@ public class WelcomeSceneHandler : MonoBehaviour
         print("Get presentation list successfull");
 
         //Switch to selection window state
+        LoginLoader.SetActive(false);
         welcomeWindow.SetActive(false);
         selectionWindow.SetActive(true);
 
