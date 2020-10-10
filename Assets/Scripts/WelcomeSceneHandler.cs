@@ -26,8 +26,13 @@ public class WelcomeSceneHandler : MonoBehaviour
     public GameObject PresListButtonPrefab;
     public int objectsPerFrame = 5;
 
+    private bool loginstarted = false;
+
     public void Login()
     {
+        if (loginstarted == true) return;
+
+        loginstarted = true;
         string emailString = email.text.Replace("\u200B", "");
         string passwordString = password.text.Replace("\u200B", "");
         LoginLoader.SetActive(true);
@@ -42,6 +47,7 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     private void LoginFailed(string msg)
     {
+        loginstarted = false;
         print("Login Failed");
         errorText.text = "Login failed. Please check your credentials.";
     }
