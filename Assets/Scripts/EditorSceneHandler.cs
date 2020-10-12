@@ -57,7 +57,6 @@ public class EditorSceneHandler : MonoBehaviour
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
-    Presentation openPresentation;
     List<GameObject> actualSceneGameObjList;
 
     // Start is called before the first frame update
@@ -92,17 +91,17 @@ public class EditorSceneHandler : MonoBehaviour
         print("Download Succeed");
 
         loadPresentation(path);
-        print(openPresentation.name);
+        print(StaticInformation.openPresentation.name);
         print(tempDirBase);
         //import all Gameobjects from the presentation
         actualSceneGameObjList = new List<GameObject>();
-        if(openPresentation.stages == null || openPresentation.stages.Count == 0)
+        if(StaticInformation.openPresentation.stages == null || StaticInformation.openPresentation.stages.Count == 0)
         {
             //Show error that no stage is given
             print("No stage in the opened presentation.");
             return;
         } 
-        create3DObjectsFromScene(openPresentation.stages[0].scene, actualSceneGameObjList);
+        create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         loadingVisualizer.SetActive(false);
     }
 
@@ -125,8 +124,8 @@ public class EditorSceneHandler : MonoBehaviour
         ZipFile.ExtractToDirectory(filePath, tempPresDir);
 
         //Deserialize json
-        //*openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
-        openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(tempPresDir + presentationJsonFilename), jsonSettings);
+        //*StaticInformation.openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
+        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(tempPresDir + presentationJsonFilename), jsonSettings);
     }
 
     /// <summary>
