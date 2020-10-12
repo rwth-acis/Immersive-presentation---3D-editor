@@ -14,24 +14,9 @@ using Microsoft.MixedReality.Toolkit.UI;
 
 public class EditorSceneHandler : MonoBehaviour
 {
-    public string tempDirBase { get; set; } //Path to the start of the temporary folder of the actual windows user 
     public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
-    public string tempDownloadDir
-    {
-        get
-        {
-            return tempDirBase + tempDownloadSuffix;
-        }
-    } //Path where the presentations are downloaded to.
-
+    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
     public const string tempSuffix = "ImPres3D\\presentation\\";
-    public string tempPresDir
-    {
-        get
-        {
-            return tempDirBase + tempSuffix;
-        }
-    } //Path where the presentation content is stored and the json of the presentation.
     public const string presentationJsonFilename = "presentation.json";
     public const string tempSub2D = "2DMedia\\";
     public const string tempSub3D = "3DMedia\\";
@@ -39,13 +24,14 @@ public class EditorSceneHandler : MonoBehaviour
     public const string tempSubSubHandout = "Handout\\";
 
     public const string tempSaveSuffix = "ImPres3D\\save\\";
-    public string tempSaveDir
+
+    public string presentationSavingPath
     {
         get
         {
-            return tempDirBase + tempSaveSuffix;
+            return StaticInformation.tempDirBase + tempSaveSuffixAndFilename;
         }
-    } //Path where the presentation is saved before uploading.
+    }
 
     /// <summary>
     /// The Gameobject that serves as the anchor for the scene
@@ -67,6 +53,7 @@ public class EditorSceneHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StaticInformation.removeDisabledObject = true;
         print(StaticInformation.selectedPresName);
 
         createWorkingDir();
@@ -74,7 +61,7 @@ public class EditorSceneHandler : MonoBehaviour
         string filename = Path.GetFileNameWithoutExtension(StaticInformation.selectedPresElem.filepath);
         if (filename == "") filename = "downloadPres";
         filename = filename + ".pres";
-        string downloadFilePath = tempDownloadDir + filename;
+        string downloadFilePath = StaticInformation.tempDownloadDir + filename;
 
 
         //Initialise the presentation download
@@ -96,8 +83,6 @@ public class EditorSceneHandler : MonoBehaviour
         print("Download Succeed");
 
         loadPresentation(path);
-        print(StaticInformation.openPresentation.name);
-        print(tempDirBase);
         //import all Gameobjects from the presentation
         actualSceneGameObjList = new List<GameObject>();
         if(StaticInformation.openPresentation.stages == null || StaticInformation.openPresentation.stages.Count == 0)
@@ -124,13 +109,13 @@ public class EditorSceneHandler : MonoBehaviour
     {
         //Load zip extracted in temp
         string filePath = pPath;
-        tempDirBase = Path.GetTempPath().ToString();
-        createCleanDirectory(tempPresDir);
-        ZipFile.ExtractToDirectory(filePath, tempPresDir);
+        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        createCleanDirectory(StaticInformation.tempPresDir);
+        ZipFile.ExtractToDirectory(filePath, StaticInformation.tempPresDir);
 
         //Deserialize json
         //*StaticInformation.openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
-        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(tempPresDir + presentationJsonFilename), jsonSettings);
+        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + presentationJsonFilename), jsonSettings);
     }
 
     /// <summary>
@@ -171,14 +156,14 @@ public class EditorSceneHandler : MonoBehaviour
 
     private void createWorkingDir()
     {
-        tempDirBase = Path.GetTempPath().ToString();
-        createCleanDirectory(tempSaveDir);
-        createCleanDirectory(tempDownloadDir);
-        createCleanDirectory(tempPresDir);
-        createCleanDirectory(tempPresDir + tempSub2D);
-        createCleanDirectory(tempPresDir + tempSub3D);
-        createCleanDirectory(tempPresDir + tempSub3D + tempSubSubScene);
-        createCleanDirectory(tempPresDir + tempSub3D + tempSubSubHandout);
+        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        createCleanDirectory(StaticInformation.tempSaveDir);
+        createCleanDirectory(StaticInformation.tempDownloadDir);
+        createCleanDirectory(StaticInformation.tempPresDir);
+        createCleanDirectory(StaticInformation.tempPresDir + tempSub2D);
+        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D);
+        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubScene);
+        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubHandout);
     }
 
     /// <summary>
@@ -191,7 +176,7 @@ public class EditorSceneHandler : MonoBehaviour
         for (int i = 0; i < pScene.elements.Count; i++)
         {
             Element3D curElement = pScene.elements[i];
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(tempPresDir + curElement.relativePath);
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
@@ -218,6 +203,7 @@ public class EditorSceneHandler : MonoBehaviour
 
     public void nextStage()
     {
+        StaticInformation.removeDisabledObject = false;
         if(StaticInformation.openStageIndex + 1 < StaticInformation.openPresentation.stages.Count && StaticInformation.openStageIndex + 1 >= 0)
         {
             StaticInformation.openStageIndex = StaticInformation.openStageIndex + 1;
@@ -231,10 +217,12 @@ public class EditorSceneHandler : MonoBehaviour
             actualSceneGameObjList = new List<GameObject>();
             create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         }
+        StaticInformation.removeDisabledObject = true;
     }
 
     public void previousStage()
     {
+        StaticInformation.removeDisabledObject = false;
         if (StaticInformation.openStageIndex - 1 < StaticInformation.openPresentation.stages.Count && StaticInformation.openStageIndex -1 >= 0)
         {
             StaticInformation.openStageIndex = StaticInformation.openStageIndex - 1;
@@ -248,5 +236,29 @@ public class EditorSceneHandler : MonoBehaviour
             actualSceneGameObjList = new List<GameObject>();
             create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         }
+        StaticInformation.removeDisabledObject = true;
+    }
+
+    public void savePresentation()
+    {
+        File.WriteAllText(StaticInformation.tempPresDir + presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
+
+        if (File.Exists(presentationSavingPath))
+        {
+            File.Delete(presentationSavingPath);
+        }
+        ZipFile.CreateFromDirectory(StaticInformation.tempPresDir, presentationSavingPath);
+
+        BackendConnection.BC.UploadPresentation(StaticInformation.selectedPresId.ToString(), presentationSavingPath, UploadSucceed, UploadFailed);
+    }
+
+    public void UploadSucceed()
+    {
+        print("Upload Succeed");
+    }
+
+    public void UploadFailed(string msg)
+    {
+        print("Upload Failed");
     }
 }

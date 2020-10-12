@@ -14,7 +14,6 @@ public class SyncEditedTransformation : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        print("Start called");
         transform.hasChanged = false;
     }
 
@@ -24,7 +23,16 @@ public class SyncEditedTransformation : MonoBehaviour
         if(transform.hasChanged)
         {
             print("Change detected");
-            transform.hasChanged = false;
+            StaticInformation.saveTranslate(relatedElement, transform);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (StaticInformation.removeDisabledObject)
+        {
+            print("Remove Object from presentation");
+            StaticInformation.remove3DElementfromPresentation(relatedElement);
         }
     }
 }

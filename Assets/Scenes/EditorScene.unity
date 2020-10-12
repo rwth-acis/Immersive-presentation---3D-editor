@@ -1052,6 +1052,16 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6722744150799764869, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 431946631}
+    - target: {fileID: 6722744150799764869, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: savePresentation
+      objectReference: {fileID: 0}
     - target: {fileID: 7217426597708350294, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_Sprite

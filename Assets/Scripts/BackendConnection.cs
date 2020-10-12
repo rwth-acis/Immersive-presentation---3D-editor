@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -92,6 +93,30 @@ public class BackendConnection : MonoBehaviour
         else
         {
             callbackOnSuccess?.Invoke(path);
+        }
+    }
+
+    public void UploadPresentation(string id, string path, UnityAction callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeUploadPresentaion(id, path, callbackOnSuccess, callbackOnFail));
+    }
+
+    IEnumerator MakeUploadPresentaion(string id, string path, UnityAction callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        WWWForm form = new WWWForm();
+        byte[] fileBytes = File.ReadAllBytes(path);
+        form.AddBinaryData("presentation", fileBytes);
+        form.AddField("idpresentation", id);
+        UnityWebRequest request = UnityWebRequest.Post(baseurl + "/presentation/upload", form);
+        request.SetRequestHeader("Authorization", "Bearer " + token);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            callbackOnSuccess?.Invoke();
         }
     }
 
