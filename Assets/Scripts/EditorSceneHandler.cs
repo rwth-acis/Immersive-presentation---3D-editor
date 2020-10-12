@@ -8,6 +8,9 @@ using ImmersivePresentation;
 using System;
 using i5.Toolkit.Core.ServiceCore;
 using i5.Toolkit.Core.ModelImporters;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class EditorSceneHandler : MonoBehaviour
 {
@@ -53,6 +56,8 @@ public class EditorSceneHandler : MonoBehaviour
     /// The loading indicator that will be removed 
     /// </summary>
     public GameObject loadingVisualizer;
+
+    public GameObject appBarPrefab;
 
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -191,6 +196,21 @@ public class EditorSceneHandler : MonoBehaviour
             obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
             obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
+
+            //Add transformation sync
+            SyncEditedTransformation syncT = obj.AddComponent<SyncEditedTransformation>() as SyncEditedTransformation;
+            syncT.relatedElement = curElement;
+
+            //Add bounds control
+            BoundsControl boundsControl;
+            boundsControl = obj.AddComponent<BoundsControl>();
+            boundsControl.BoundsControlActivation = BoundsControlActivationType.ActivateManually;
+
+            GameObject appBar =  Instantiate(appBarPrefab);
+            AppBar appBarScript = appBar.GetComponent<AppBar>();
+            appBarScript.Target = obj.GetComponent<BoundsControl>();
+            pSceneGameObjList.Add(appBar);
+
             pSceneGameObjList.Add(obj);
             print("imported obj with id: " + i);
         }

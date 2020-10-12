@@ -604,6 +604,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anchor: {fileID: 1600277644}
   loadingVisualizer: {fileID: 336381485}
+  appBarPrefab: {fileID: 9177478684475929351, guid: 1b5436d06e1e5ba46a85550a0b2cbb47,
+    type: 3}
 --- !u!114 &431946632
 MonoBehaviour:
   m_ObjectHideFlags: 0
