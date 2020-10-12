@@ -28,8 +28,12 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     private bool loginstarted = false;
 
+    private bool rememberMe = true;
+
     public void Start()
     {
+        email.text = PlayerPrefs.GetString("email", "");
+        password.text = PlayerPrefs.GetString("pwd", "");
         if (BackendConnection.BC.loggedIn)
         {
             welcomeWindow.SetActive(false);
@@ -42,9 +46,17 @@ public class WelcomeSceneHandler : MonoBehaviour
     {
         if (loginstarted == true) return;
 
+        
+
         loginstarted = true;
         string emailString = email.text.Replace("\u200B", "");
         string passwordString = password.text.Replace("\u200B", "");
+        if (rememberMe)
+        {
+            PlayerPrefs.SetString("email", emailString);
+            PlayerPrefs.SetString("pwd", passwordString);
+            PlayerPrefs.Save();
+        }
         LoginLoader.SetActive(true);
         BackendConnection.BC.Login(emailString, passwordString, LoginSucceed, LoginFailed);
     }
@@ -124,5 +136,22 @@ public class WelcomeSceneHandler : MonoBehaviour
         if (StaticInformation.selectedPresElem == null) return;
 
         SceneManager.LoadScene("Scenes/EditorScene");
+    }
+
+    public void terminateApplication()
+    {
+        Application.Quit();
+    }
+
+    public void logout()
+    {
+        selectionWindow.SetActive(false);
+        welcomeWindow.SetActive(true);
+        BackendConnection.BC.loggedIn = false;
+    }
+
+    public void toogleRememberMe()
+    {
+        rememberMe = !rememberMe;
     }
 }

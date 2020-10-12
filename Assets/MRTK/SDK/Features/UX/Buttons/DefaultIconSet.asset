@@ -55,6 +55,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 92e946677e9a894438c149d6445e256e, type: 3}
   - {fileID: 21300000, guid: bb20dc7acd54b534ba68a2f296165a2b, type: 3}
   - {fileID: 21300000, guid: c3b4098382dc5984294b83769a8413db, type: 3}
+  - {fileID: 21300000, guid: 21b37f5ba272b3d4ab6a720c0339c348, type: 3}
   charIconFont: {fileID: 0}
   charIcons:
   - Name: AppBarAdjust
