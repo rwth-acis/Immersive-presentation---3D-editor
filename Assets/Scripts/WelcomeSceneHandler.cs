@@ -28,6 +28,16 @@ public class WelcomeSceneHandler : MonoBehaviour
 
     private bool loginstarted = false;
 
+    public void Start()
+    {
+        if (BackendConnection.BC.loggedIn)
+        {
+            welcomeWindow.SetActive(false);
+            LoginLoader.SetActive(true);
+            BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
+        }
+    }
+
     public void Login()
     {
         if (loginstarted == true) return;
@@ -42,6 +52,7 @@ public class WelcomeSceneHandler : MonoBehaviour
     private void LoginSucceed(LoginResponse response)
     {
         print("Login Succeed");
+        BackendConnection.BC.loggedIn = true;
         BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
     }
 

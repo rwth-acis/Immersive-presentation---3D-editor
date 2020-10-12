@@ -14,7 +14,7 @@ public class BackendConnection : MonoBehaviour
 
     private string baseurl = "http://binarybros.de";
 
-    private bool loggedIn = false;
+    public bool loggedIn = false;
     private string token;
     private long exp;
     private int userId;

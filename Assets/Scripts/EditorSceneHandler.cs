@@ -11,6 +11,7 @@ using i5.Toolkit.Core.ModelImporters;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
 using Microsoft.MixedReality.Toolkit.UI;
+using UnityEngine.SceneManagement;
 
 public class EditorSceneHandler : MonoBehaviour
 {
@@ -196,6 +197,9 @@ public class EditorSceneHandler : MonoBehaviour
             appBarScript.Target = obj.GetComponent<BoundsControl>();
             pSceneGameObjList.Add(appBar);
 
+            ObjectManipulator objMan;
+            objMan = obj.AddComponent<ObjectManipulator>();
+
             pSceneGameObjList.Add(obj);
             print("imported obj with id: " + i);
         }
@@ -239,6 +243,9 @@ public class EditorSceneHandler : MonoBehaviour
         StaticInformation.removeDisabledObject = true;
     }
 
+    /// <summary>
+    /// Creats a .pres file from the actual presentation. Then this .pres file is uploaded to the backend coordinator
+    /// </summary>
     public void savePresentation()
     {
         File.WriteAllText(StaticInformation.tempPresDir + presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
@@ -260,5 +267,24 @@ public class EditorSceneHandler : MonoBehaviour
     public void UploadFailed(string msg)
     {
         print("Upload Failed");
+    }
+
+    /// <summary>
+    /// Closes the editing of the 
+    /// </summary>
+    public void closePresentation()
+    {
+        StaticInformation.removeDisabledObject = false;
+        //delete obj from old scene
+        foreach (GameObject obj in actualSceneGameObjList)
+        {
+            //actualSceneGameObjList.Remove(obj);
+            Destroy(obj);
+        }
+        actualSceneGameObjList = new List<GameObject>();
+
+        StaticInformation.openPresentation = null;
+        StaticInformation.selectedPresElem = null;
+        SceneManager.LoadScene("Scenes/WelcomeScene");
     }
 }
