@@ -195,4 +195,38 @@ public class EditorSceneHandler : MonoBehaviour
             print("imported obj with id: " + i);
         }
     }
+
+    public void nextStage()
+    {
+        if(StaticInformation.openStageIndex + 1 < StaticInformation.openPresentation.stages.Count && StaticInformation.openStageIndex + 1 >= 0)
+        {
+            StaticInformation.openStageIndex = StaticInformation.openStageIndex + 1;
+            //delete obj from old scene
+            foreach(GameObject obj in actualSceneGameObjList)
+            {
+                //actualSceneGameObjList.Remove(obj);
+                Destroy(obj);
+            }
+            //load obj from the new scene
+            actualSceneGameObjList = new List<GameObject>();
+            create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
+        }
+    }
+
+    public void previousStage()
+    {
+        if (StaticInformation.openStageIndex - 1 < StaticInformation.openPresentation.stages.Count && StaticInformation.openStageIndex -1 >= 0)
+        {
+            StaticInformation.openStageIndex = StaticInformation.openStageIndex - 1;
+            //delete obj from old scene
+            foreach (GameObject obj in actualSceneGameObjList)
+            {
+                //actualSceneGameObjList.Remove(obj);
+                Destroy(obj);
+            }
+            //load obj from the new scene
+            actualSceneGameObjList = new List<GameObject>();
+            create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
+        }
+    }
 }
