@@ -117,7 +117,8 @@ public static class StaticInformation
         }
     }
 
-    //Edit openPresentation
+
+    public static string shortCode;
 
     public static void remove3DElementfromPresentation(Element3D elem)
     {

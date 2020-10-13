@@ -96,6 +96,33 @@ public class BackendConnection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Downloads the presentation file from the backend coordinator
+    /// </summary>
+    /// <param name="id">ShortCode of the presentation</param>
+    /// <param name="path">Locatio where the presentation file should be saved</param>
+    /// <param name="callbackOnSuccess">Callback that is called when download succeeded</param>
+    /// <param name="callbackOnFail">Callback that is called when download failed</param>
+    public void DownloadPresentationShortCode(string shortCode, string path, UnityAction<string> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeDownloadPresentationShortCode(shortCode, path, callbackOnSuccess, callbackOnFail));
+    }
+
+    IEnumerator MakeDownloadPresentationShortCode(string shortCode, string path, UnityAction<string> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(baseurl + string.Format("/presentation/shortCode?shortCode={0}", Uri.EscapeDataString(shortCode)));
+        request.downloadHandler = new DownloadHandlerFile(path);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            callbackOnSuccess?.Invoke(path);
+        }
+    }
+
     public void UploadPresentation(string id, string path, UnityAction callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
         StartCoroutine(MakeUploadPresentaion(id, path, callbackOnSuccess, callbackOnFail));
