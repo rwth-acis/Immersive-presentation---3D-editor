@@ -152,6 +152,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &404800727 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1275815092924048, guid: 83c02591e2867124181bcd3bcb65e288,
+    type: 3}
+  m_PrefabInstance: {fileID: 1364047108}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &538335352
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -218,6 +224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: anchorVisualizer
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: f8a43c3772dd845419dfd0c02ec1686b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8a43c3772dd845419dfd0c02ec1686b, type: 3}
@@ -500,7 +511,7 @@ PrefabInstance:
     - target: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
         type: 3}
       propertyPath: m_Name
-      value: StartEditorLoadingIndicator
+      value: PresentInitializeLoadingIndicator
       objectReference: {fileID: 0}
     - target: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
         type: 3}
@@ -630,6 +641,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 538582238149148, guid: 9a7c24f281a2c3d45a9b8befe608bf77, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 547757556876011835, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_IsActive
@@ -936,6 +951,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnchorAppBar
       objectReference: {fileID: 0}
+    - target: {fileID: 1275815092924048, guid: 83c02591e2867124181bcd3bcb65e288, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4773597359991020, guid: 83c02591e2867124181bcd3bcb65e288, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.003
@@ -984,7 +1003,7 @@ PrefabInstance:
         type: 3}
       propertyPath: boundingBox
       value: 
-      objectReference: {fileID: 538335356}
+      objectReference: {fileID: 538335355}
     - target: {fileID: 114050950401502068, guid: 83c02591e2867124181bcd3bcb65e288,
         type: 3}
       propertyPath: useRemove
@@ -1371,6 +1390,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 538582238149148, guid: 9a7c24f281a2c3d45a9b8befe608bf77, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 547757556876011835, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_IsActive
@@ -1642,6 +1665,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1630294837}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1664402036 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5301351100929939167, guid: 9c4ddc0ec93e1df449e9984dca497355,
+    type: 3}
+  m_PrefabInstance: {fileID: 1137953122}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1757034191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1649,6 +1678,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 538582238149148, guid: 9a7c24f281a2c3d45a9b8befe608bf77, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 547757556876011835, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_IsActive
@@ -1990,6 +2023,7 @@ GameObject:
   - component: {fileID: 2039997818}
   - component: {fileID: 2039997819}
   - component: {fileID: 2039997820}
+  - component: {fileID: 2039997821}
   m_Layer: 0
   m_Name: SceneMaster
   m_TagString: Untagged
@@ -2024,8 +2058,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anchor: {fileID: 538335353}
+  anchorAppBar: {fileID: 404800727}
+  loadingIndicator: {fileID: 1664402036}
   menueOwner: {fileID: 1111224474}
   menueGuest: {fileID: 1630294838}
+  photonConnectionScript: {fileID: 2039997821}
+  isOwner: 0
 --- !u!114 &2039997819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2039,6 +2077,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loggedIn: 0
+  userId: 0
 --- !u!114 &2039997820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2051,3 +2090,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3b7fdcc45d96943aa8509cd42a0029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2039997821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039997816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28781cc28418c44478c6b722c339c226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  presentHandling: {fileID: 2039997818}
+  roomTTL: 180

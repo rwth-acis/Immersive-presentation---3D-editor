@@ -119,7 +119,10 @@ public static class StaticInformation
 
 
     public static string shortCode;
-
+    /// <summary>
+    /// The information about the joined Presentation
+    /// </summary>
+    public static ConnectionInformation connInf;
     public static void remove3DElementfromPresentation(Element3D elem)
     {
         //clean the presentaion temp folder

@@ -17,7 +17,7 @@ public class BackendConnection : MonoBehaviour
     public bool loggedIn = false;
     private string token;
     private long exp;
-    private int userId;
+    public int userId;
 
     public void Login(string email, string pwd, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
@@ -144,6 +144,33 @@ public class BackendConnection : MonoBehaviour
         else
         {
             callbackOnSuccess?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// Makes an API call to recieve the connection informations that belong to the shortCode.
+    /// </summary>
+    /// <param name="shortCode">The shortCode that is used to get the connection information</param>
+    /// <param name="callbackOnSuccess">Will be called when the API call suceed</param>
+    /// <param name="callbackOnFail">Will be called when the API call failed</param>
+    public void GetConnectionInformation(string shortCode, UnityAction<ConnectionInformation> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeGetConnectionInformation(shortCode, callbackOnSuccess, callbackOnFail));
+    }
+
+    IEnumerator MakeGetConnectionInformation(string shortCode, UnityAction<ConnectionInformation> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        UnityWebRequest request = UnityWebRequest.Get(baseurl + string.Format("/presentation/connectioninfos/shortCode?shortCode={0}", Uri.EscapeDataString(shortCode)));
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            ConnectionInformation output = JsonConvert.DeserializeObject<ConnectionInformation>(request.downloadHandler.text);
+            callbackOnSuccess?.Invoke(output);
         }
     }
 

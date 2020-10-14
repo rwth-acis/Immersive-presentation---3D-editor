@@ -8,6 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PresentHandling : MonoBehaviour
@@ -23,7 +24,6 @@ public class PresentHandling : MonoBehaviour
         }
         set
         {
-            loadSceneFromStage(value);
             _stageIndex = value;
         }
     }
@@ -31,14 +31,17 @@ public class PresentHandling : MonoBehaviour
     private  List<GameObject> generadedGameObjects;
 
     public GameObject anchor;
+    public GameObject anchorAppBar;
+    public GameObject loadingIndicator;
     public GameObject menueOwner;
     public GameObject menueGuest;
+    public PhotonConnectionScript photonConnectionScript;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
     public const string presentationJsonFilename = "presentation.json";
 
-    private bool isOwner = false;
+    public bool isOwner = false;
 
     /// <summary>
     /// Returns the stage that is the actual one at the moment
@@ -55,7 +58,7 @@ public class PresentHandling : MonoBehaviour
     /// Loads the 3D Elements that are in the scene of the given stage that is defined by the stageIndex.
     /// </summary>
     /// <param name="pStageIndex">The index of the Stage from where the scene should be loaded.</param>
-    public async void loadSceneFromStage(int pStageIndex)
+    public async Task loadSceneFromStage(int pStageIndex)
     {
         //clean old scene
         if (generadedGameObjects != null && generadedGameObjects.Count != 0)
@@ -134,12 +137,18 @@ public class PresentHandling : MonoBehaviour
 
     public void nextStage()
     {
-        print("NotImplemented");
+        if(stageIndex + 1 < openPresentation.stages.Count)
+        {
+            photonConnectionScript.sendStageIndex(stageIndex + 1);
+        }
     }
 
     public void previousStage()
     {
-        print("NotImplemented");
+        if(stageIndex - 1 >= 0)
+        {
+            photonConnectionScript.sendStageIndex(stageIndex - 1);
+        }
     }
 
     public void leavePresentation()
@@ -164,6 +173,7 @@ public class PresentHandling : MonoBehaviour
     void Start()
     {
         //DEBUG:
+        BackendConnection.BC.userId = 1;
         StaticInformation.shortCode = "1-14";
 
         //check for shortCode in StaticInformation Join 
@@ -196,13 +206,18 @@ public class PresentHandling : MonoBehaviour
     /// </summary>
     public void secondPartOfSetup()
     {
+        
+        //connect to photon room
+        BackendConnection.BC.GetConnectionInformation(StaticInformation.shortCode, thirdPartOfStart, ConnectionInfoFailed);
+        
+    }
 
-        stageIndex = 0;
+    void thirdPartOfStart(ConnectionInformation pConnInf)
+    {
+        //Save pConnInfo in StaticInfo
+        StaticInformation.connInf = pConnInf;
         //check ownership
-        print(openPresentation.ownerId);
-        double presUserId;
-        bool isNumeric = Double.TryParse(openPresentation.ownerId, out presUserId);
-        if(isNumeric && StaticInformation.userId == presUserId)
+        if (BackendConnection.BC.userId == StaticInformation.connInf.iduser)
         {
             isOwner = true;
             menueOwner.SetActive(true);
@@ -215,22 +230,23 @@ public class PresentHandling : MonoBehaviour
             menueGuest.SetActive(true);
         }
         //connect to photon room
+        photonConnectionScript.connectToRoom(StaticInformation.connInf.photonroomname);
+        
+    }
 
-        //check for spatial anchor existens
+    public async Task<string> generateAnchorAsync()
+    {
+        anchor.SetActive(true);
+        anchorAppBar.SetActive(true);
+        print("anchor generated async");
+        return "AnchorIdFake";
+    }
 
-        //Load spatial anchor
-
-        //Else
-        //Create and upload spatial anchor
-
-        //check for actualStage
-
-        //remove loading indicator
-        //load actualStage
-
-        //Else
-        //Set actualStage to 0
-        //load actualStage
+    public async Task loadAnchorAsync(string anchorID)
+    {
+        anchor.SetActive(true);
+        anchorAppBar.SetActive(true);
+        print("Anchor loaded async");
     }
 
     void Update()
@@ -254,6 +270,11 @@ public class PresentHandling : MonoBehaviour
     }
 
     public void DownloadFailed(string msg)
+    {
+        print(msg);
+    }
+
+    public void ConnectionInfoFailed(string msg)
     {
         print(msg);
     }
