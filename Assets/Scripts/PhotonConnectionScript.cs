@@ -11,9 +11,22 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
     /// <summary>
     /// Seconds that tht room will stay open no one is in the room anymore
     /// </summary>
-    public int roomTTL = 60;
+    public int roomTTL = 10;
 
-    private string roomName;
+    private string _roomName;
+    private string roomName
+    {
+        get
+        {
+            return _roomName;
+        }
+
+        set
+        {
+            print(value);
+            _roomName = value;
+        }
+    }
     private bool setupDone = false;
 
     //The names of the room porperties used in the photon rooms
@@ -39,12 +52,13 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
     {
         roomName = pRoomName;
         PhotonNetwork.ConnectUsingSettings();
+        //PhotonNetwork.ConnectToRegion("eu");
     }
 
     public override void OnCreatedRoom()
     {
         base.OnCreatedRoom();
-        //print("Created Room");
+        print("Created Room");
         //roomEntered();
     }
 
@@ -171,6 +185,13 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
                         {STAGE_INDEX_PROPERTY_NAME, pAnchorId }
                     }
                     );
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+
+        print("Player entered the room");
     }
 
 }
