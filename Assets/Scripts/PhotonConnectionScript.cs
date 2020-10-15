@@ -11,7 +11,7 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
     /// <summary>
     /// Seconds that tht room will stay open no one is in the room anymore
     /// </summary>
-    public int roomTTL = 10;
+    public int roomTTL = 0;
 
     private string _roomName;
     private string roomName

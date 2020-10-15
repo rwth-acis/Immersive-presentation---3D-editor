@@ -163,6 +163,7 @@ public class WelcomeSceneHandler : MonoBehaviour
         if (inputShortCode == "") return;
 
         StaticInformation.shortCode = inputShortCode;
-        SceneManager.LoadScene("Scenes/PresentationScene");
+        SceneManager.LoadScene("Scenes/PresentationScene", LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync("WelcomeScene");
     }
 }

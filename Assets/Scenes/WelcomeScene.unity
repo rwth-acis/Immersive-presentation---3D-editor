@@ -6270,11 +6270,11 @@ PrefabInstance:
         type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2108150639}
     - target: {fileID: 5487525929659315375, guid: 4f44c0d070528944c9bff425c6932763,
         type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
+      value: joinPres
       objectReference: {fileID: 0}
     - target: {fileID: 6055314345997109590, guid: 4f44c0d070528944c9bff425c6932763,
         type: 3}
@@ -10219,7 +10219,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2108150638}
   - component: {fileID: 2108150639}
-  - component: {fileID: 2108150640}
   m_Layer: 0
   m_Name: SceneMaster
   m_TagString: Untagged
@@ -10265,20 +10264,6 @@ MonoBehaviour:
   PresListButtonPrefab: {fileID: 6067342714973020960, guid: de4d51fd2cb62914c9af95a561b1210a,
     type: 3}
   objectsPerFrame: 5
---- !u!114 &2108150640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2108150637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ad881f20402f684396d5c2d16b8554a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loggedIn: 0
-  userId: 0
 --- !u!21 &2122555511
 Material:
   serializedVersion: 6
