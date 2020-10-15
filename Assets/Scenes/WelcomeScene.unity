@@ -8932,6 +8932,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1677124886}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1677124888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2093565322073310844, guid: 4daceed0c4c3c09468897226b8717688,
+    type: 3}
+  m_PrefabInstance: {fileID: 1677124886}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1775854754 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4165280830115576, guid: 6f89876ff9050224f949c0490969219d,
@@ -10243,6 +10255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   email: {fileID: 1371905237}
   password: {fileID: 1123824307}
+  joinInput: {fileID: 1677124888}
   errorText: {fileID: 1515248631}
   welcomeWindow: {fileID: 330326995}
   selectionWindow: {fileID: 356803196}
@@ -10265,6 +10278,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loggedIn: 0
+  userId: 0
 --- !u!21 &2122555511
 Material:
   serializedVersion: 6

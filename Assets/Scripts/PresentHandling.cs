@@ -172,10 +172,6 @@ public class PresentHandling : MonoBehaviour
 
     void Start()
     {
-        //DEBUG:
-        BackendConnection.BC.userId = 1;
-        StaticInformation.shortCode = "1-14";
-
         //check for shortCode in StaticInformation Join 
         if(StaticInformation.shortCode == null)
         {

@@ -285,6 +285,8 @@ public class EditorSceneHandler : MonoBehaviour
 
         StaticInformation.openPresentation = null;
         StaticInformation.selectedPresElem = null;
-        SceneManager.LoadScene("Scenes/WelcomeScene");
+        SceneManager.LoadScene("Scenes/WelcomeScene", LoadSceneMode.Additive);
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName("WelcomeScene"));
+        SceneManager.UnloadSceneAsync("EditorScene");
     }
 }

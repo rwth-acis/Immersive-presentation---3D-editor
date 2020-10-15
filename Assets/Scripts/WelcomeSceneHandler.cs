@@ -14,6 +14,7 @@ public class WelcomeSceneHandler : MonoBehaviour
 {
     public TMP_InputField email;
     public TMP_InputField password;
+    public TMP_InputField joinInput;
     public TextMeshProUGUI errorText;
     public GameObject welcomeWindow;
     public GameObject selectionWindow;
@@ -36,9 +37,9 @@ public class WelcomeSceneHandler : MonoBehaviour
         password.text = PlayerPrefs.GetString("pwd", "");
         if (BackendConnection.BC.loggedIn)
         {
-            welcomeWindow.SetActive(false);
-            LoginLoader.SetActive(true);
-            BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
+            //welcomeWindow.SetActive(false);
+            //LoginLoader.SetActive(true);
+            //BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
         }
     }
 
@@ -135,7 +136,8 @@ public class WelcomeSceneHandler : MonoBehaviour
     {
         if (StaticInformation.selectedPresElem == null) return;
 
-        SceneManager.LoadScene("Scenes/EditorScene");
+        SceneManager.LoadScene("Scenes/EditorScene", LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync("WelcomeScene");
     }
 
     public void terminateApplication()
@@ -153,5 +155,14 @@ public class WelcomeSceneHandler : MonoBehaviour
     public void toogleRememberMe()
     {
         rememberMe = !rememberMe;
+    }
+
+    public void joinPres()
+    {
+        string inputShortCode = joinInput.text.Replace("\u200B", "");
+        if (inputShortCode == "") return;
+
+        StaticInformation.shortCode = inputShortCode;
+        SceneManager.LoadScene("Scenes/PresentationScene");
     }
 }

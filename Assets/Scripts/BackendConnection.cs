@@ -177,9 +177,14 @@ public class BackendConnection : MonoBehaviour
     private void Awake()
     {
         if (BC != null)
+        {
             GameObject.Destroy(BC);
-        else
             BC = this;
+        }
+        else
+        {
+            BC = this;
+        }
 
         DontDestroyOnLoad(this);
     }
