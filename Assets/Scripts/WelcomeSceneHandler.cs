@@ -15,6 +15,7 @@ public class WelcomeSceneHandler : MonoBehaviour
     public TMP_InputField email;
     public TMP_InputField password;
     public TMP_InputField joinInput;
+    public TMP_InputField joinGuestInput;
     public TextMeshProUGUI errorText;
     public GameObject welcomeWindow;
     public GameObject selectionWindow;
@@ -35,11 +36,11 @@ public class WelcomeSceneHandler : MonoBehaviour
     {
         email.text = PlayerPrefs.GetString("email", "");
         password.text = PlayerPrefs.GetString("pwd", "");
-        if (BackendConnection.BC.loggedIn)
+        if (BackendConnection.BC != null && BackendConnection.BC.loggedIn)
         {
-            //welcomeWindow.SetActive(false);
-            //LoginLoader.SetActive(true);
-            //BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
+            welcomeWindow.SetActive(false);
+            LoginLoader.SetActive(true);
+            BackendConnection.BC.LoadPresList(LoadListSucceed, LoadListFailed);
         }
     }
 
@@ -160,6 +161,15 @@ public class WelcomeSceneHandler : MonoBehaviour
     public void joinPres()
     {
         string inputShortCode = joinInput.text.Replace("\u200B", "");
+        if (inputShortCode == "") return;
+
+        StaticInformation.shortCode = inputShortCode;
+        SceneManager.LoadScene("Scenes/PresentationScene", LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync("WelcomeScene");
+    }
+    public void joinPresGuest()
+    {
+        string inputShortCode = joinGuestInput.text.Replace("\u200B", "");
         if (inputShortCode == "") return;
 
         StaticInformation.shortCode = inputShortCode;

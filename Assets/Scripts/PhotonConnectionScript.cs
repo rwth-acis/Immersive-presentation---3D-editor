@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ExitGames.Client.Photon;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class PhotonConnectionScript : MonoBehaviourPunCallbacks
 {
@@ -75,6 +76,7 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
         {
             print("owner sets up the room");
             //check for spatial anchor existens
+            presentHandling.anchor.GetComponent<ObjectManipulator>().enabled = true;
             object azureSpatialAnchorIdHelper = null;
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ANCHORID_PROPERTY_NAME, out azureSpatialAnchorIdHelper))
             {
@@ -125,9 +127,45 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
         }
         else
         {
+            //check for spatial anchor existens
+            object azureSpatialAnchorIdHelper = null;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ANCHORID_PROPERTY_NAME, out azureSpatialAnchorIdHelper))
+            {
+                //Load spatial anchor
+                await presentHandling.loadAnchorAsync((string)azureSpatialAnchorIdHelper);
+            }
+            else
+            {
+                print("Waiting for an owner to start the presentation - no anchor set.");
+            }
+
+            //check for actualStage
+            object stageIndexHelper = null;
+            if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(STAGE_INDEX_PROPERTY_NAME, out stageIndexHelper))
+            {
+                //load actualStage
+                int stageIndex = (int)stageIndexHelper;
+                presentHandling.stageIndex = stageIndex;
+                await presentHandling.loadSceneFromStage(stageIndex);
+            }
+            else
+            {
+                //set actual stage
+                int stageIndex = 0;
+                presentHandling.stageIndex = stageIndex;
+                await presentHandling.loadSceneFromStage(stageIndex);
+                PhotonNetwork.CurrentRoom.SetCustomProperties(
+                    new ExitGames.Client.Photon.Hashtable()
+                    {
+                        {STAGE_INDEX_PROPERTY_NAME, stageIndex }
+                    }
+                    );
+            }
+
+            //remove loading indicator
+            presentHandling.loadingIndicator.SetActive(false);
+
             setupDone = true;
-            //not the owner
-            print("not the owner");
         }
     }
 
@@ -192,6 +230,11 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
         base.OnPlayerEnteredRoom(newPlayer);
 
         print("Player entered the room");
+    }
+
+    public void Disconnect()
+    {
+        PhotonNetwork.Disconnect();
     }
 
 }

@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PresentHandling : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class PresentHandling : MonoBehaviour
     public GameObject anchorAppBar;
     public GameObject loadingIndicator;
     public GameObject menueOwner;
+    public GameObject menueMore;
     public GameObject menueGuest;
     public PhotonConnectionScript photonConnectionScript;
 
@@ -130,9 +132,9 @@ public class PresentHandling : MonoBehaviour
         finally { }
     }
 
-    public void openMoreMenue()
+    public void openMoreMenu()
     {
-        print("NotImplemented");
+        menueMore.SetActive(true);
     }
 
     public void nextStage()
@@ -153,12 +155,28 @@ public class PresentHandling : MonoBehaviour
 
     public void leavePresentation()
     {
-        print("NotImplemented");
+        photonConnectionScript.Disconnect();
+        StaticInformation.openPresentation = null;
+        StaticInformation.selectedPresElem = null;
+        SceneManager.LoadScene("Scenes/WelcomeScene", LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync("PresentationScene");
     }
 
     public void leaveAndStopPresentation()
     {
-        print("NotImplemented");
+        //stop the presentation for coordinator
+
+        //leave the presentation
+        photonConnectionScript.Disconnect();
+        StaticInformation.openPresentation = null;
+        StaticInformation.selectedPresElem = null;
+        SceneManager.LoadScene("Scenes/WelcomeScene", LoadSceneMode.Additive);
+        SceneManager.UnloadSceneAsync("PresentationScene");
+    }
+
+    public void closeMenuMore()
+    {
+        menueMore.SetActive(false);
     }
 
     /// <summary>
@@ -191,7 +209,14 @@ public class PresentHandling : MonoBehaviour
 
 
         //Initialise the presentation download
-        if (BackendConnection.BC == null) print("1");
+        if (BackendConnection.BC == null) 
+        {
+            print("Error: No Backend connection established.");
+            StaticInformation.openPresentation = null;
+            StaticInformation.selectedPresElem = null;
+            SceneManager.LoadScene("Scenes/WelcomeScene", LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync("PresentationScene");
+        }
         BackendConnection.BC.DownloadPresentationShortCode(StaticInformation.shortCode, downloadFilePath, DownloadSucceed, DownloadFailed);
 
         //setup continues in secondPartOfSetup()
@@ -213,7 +238,7 @@ public class PresentHandling : MonoBehaviour
         //Save pConnInfo in StaticInfo
         StaticInformation.connInf = pConnInf;
         //check ownership
-        if (BackendConnection.BC.userId == StaticInformation.connInf.iduser)
+        if (BackendConnection.BC.loggedIn && BackendConnection.BC.userId == StaticInformation.connInf.iduser)
         {
             isOwner = true;
             menueOwner.SetActive(true);
