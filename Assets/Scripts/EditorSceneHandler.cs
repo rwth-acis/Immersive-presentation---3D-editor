@@ -177,7 +177,11 @@ public class EditorSceneHandler : MonoBehaviour
         for (int i = 0; i < pScene.elements.Count; i++)
         {
             Element3D curElement = pScene.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+#else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+#endif
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);

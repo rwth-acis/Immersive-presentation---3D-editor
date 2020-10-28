@@ -78,8 +78,15 @@ public class PresentHandling : MonoBehaviour
         //load new scene
         for (int i = 0; i < openPresentation.stages[pStageIndex].scene.elements.Count; i++)
         {
+            loadingIndicator.SetActive(true);
             Element3D curElement = openPresentation.stages[pStageIndex].scene.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#endif
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3((float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
@@ -91,7 +98,7 @@ public class PresentHandling : MonoBehaviour
 
     private void createWorkingDir()
     {
-        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        StaticInformation.tempDirBase = Application.persistentDataPath;
         createCleanDirectory(StaticInformation.tempSaveDir);
         createCleanDirectory(StaticInformation.tempDownloadDir);
         createCleanDirectory(StaticInformation.tempPresDir);
@@ -279,7 +286,7 @@ public class PresentHandling : MonoBehaviour
     {
         //Load zip extracted in temp
         string filePath = path;
-        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        StaticInformation.tempDirBase = Application.persistentDataPath;
         createCleanDirectory(StaticInformation.tempPresDir);
         ZipFile.ExtractToDirectory(filePath, StaticInformation.tempPresDir);
 
