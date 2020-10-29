@@ -72,6 +72,11 @@ public static class StaticInformation
 #else
     public const string tempSaveSuffix = "ImPres3D\\save\\";
 #endif
+#if UNITY_ANDROID
+    public const string tempSaveSuffixAndFilename = "/ImPres3D/save/presentation.pres";
+#else
+    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
+#endif
     public static string tempSaveDir
     {
         get

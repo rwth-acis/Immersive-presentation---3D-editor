@@ -15,22 +15,11 @@ using UnityEngine.SceneManagement;
 
 public class EditorSceneHandler : MonoBehaviour
 {
-    public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
-    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
-    public const string tempSuffix = "ImPres3D\\presentation\\";
-    public const string presentationJsonFilename = "presentation.json";
-    public const string tempSub2D = "2DMedia\\";
-    public const string tempSub3D = "3DMedia\\";
-    public const string tempSubSubScene = "Scene\\";
-    public const string tempSubSubHandout = "Handout\\";
-
-    public const string tempSaveSuffix = "ImPres3D\\save\\";
-
     public string presentationSavingPath
     {
         get
         {
-            return StaticInformation.tempDirBase + tempSaveSuffixAndFilename;
+            return StaticInformation.tempDirBase + StaticInformation.tempSaveSuffixAndFilename;
         }
     }
 
@@ -116,7 +105,7 @@ public class EditorSceneHandler : MonoBehaviour
 
         //Deserialize json
         //*StaticInformation.openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
-        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + presentationJsonFilename), jsonSettings);
+        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename), jsonSettings);
     }
 
     /// <summary>
@@ -161,10 +150,10 @@ public class EditorSceneHandler : MonoBehaviour
         createCleanDirectory(StaticInformation.tempSaveDir);
         createCleanDirectory(StaticInformation.tempDownloadDir);
         createCleanDirectory(StaticInformation.tempPresDir);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub2D);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubScene);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubHandout);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub2D);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D + StaticInformation.tempSubSubScene);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D + StaticInformation.tempSubSubHandout);
     }
 
     /// <summary>
@@ -252,7 +241,7 @@ public class EditorSceneHandler : MonoBehaviour
     /// </summary>
     public void savePresentation()
     {
-        File.WriteAllText(StaticInformation.tempPresDir + presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
+        File.WriteAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
 
         if (File.Exists(presentationSavingPath))
         {
