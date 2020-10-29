@@ -37,6 +37,7 @@ public class PresentHandling : MonoBehaviour
     public GameObject menueOwner;
     public GameObject menueMore;
     public GameObject menueGuest;
+    public GameObject canvas;
     public PhotonConnectionScript photonConnectionScript;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -44,6 +45,9 @@ public class PresentHandling : MonoBehaviour
     public const string presentationJsonFilename = "presentation.json";
 
     public bool isOwner = false;
+
+    public Renderer canvasRenderer;
+    public Material backupMaterial;
 
     /// <summary>
     /// Returns the stage that is the actual one at the moment
@@ -93,6 +97,27 @@ public class PresentHandling : MonoBehaviour
             obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
 
             generadedGameObjects.Add(obj);
+        }
+
+        //update the canvas
+        loadCanvas(pStageIndex);
+    }
+
+    private void loadCanvas(int pStageIndex)
+    {
+        //the images as in the subfolder CanvasImg/[pStageIndex].png
+        string potentialCanvasImgPath = StaticInformation.tempPresDir + StaticInformation.tempSubCanvasImg + pStageIndex + ".png";
+
+        if (File.Exists(potentialCanvasImgPath))
+        {
+            var bytes = System.IO.File.ReadAllBytes(potentialCanvasImgPath);
+            var tex = new Texture2D(1, 1);
+            tex.LoadImage(bytes);
+            canvasRenderer.material.mainTexture = tex;
+        }
+        else
+        {
+            canvasRenderer.material = backupMaterial;
         }
     }
 
@@ -305,6 +330,11 @@ public class PresentHandling : MonoBehaviour
     public void ConnectionInfoFailed(string msg)
     {
         print(msg);
+    }
+
+    public void showCanvas()
+    {
+        canvas.SetActive(true);
     }
 
 }

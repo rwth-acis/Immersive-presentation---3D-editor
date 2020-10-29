@@ -77,6 +77,11 @@ public static class StaticInformation
 #else
     public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
 #endif
+#if UNITY_ANDROID
+    public const string tempSubCanvasImg = "/CanvasImg/";
+#else
+    public const string tempSubCanvasImg = "CanvasImg\\";
+#endif
     public static string tempSaveDir
     {
         get
