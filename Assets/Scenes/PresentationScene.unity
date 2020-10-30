@@ -1623,39 +1623,39 @@ PrefabInstance:
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_text
-      value: 'Previous
+      value: 'Toogle
 
-        Stage'
+        Handout / Scene'
       objectReference: {fileID: 0}
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 765132142816463200, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 765132143436994704, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1174664880297776584, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1666,16 +1666,16 @@ PrefabInstance:
         type: 3}
       propertyPath: iconQuadTexture
       value: 
-      objectReference: {fileID: 2800000, guid: bd30f98596e69f7469fda20a47760dd1, type: 3}
+      objectReference: {fileID: 2800000, guid: 8d0274d8bc6a17844a08b493920d9491, type: 3}
     - target: {fileID: 1697582316351518837, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0676
+      value: 0.05235
       objectReference: {fileID: 0}
     - target: {fileID: 1697582316351518837, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.09310973
+      value: 0.123600855
       objectReference: {fileID: 0}
     - target: {fileID: 2064496018249462858, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1685,7 +1685,7 @@ PrefabInstance:
     - target: {fileID: 2064496018249462858, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: showCanvas
+      value: leavePresentation
       objectReference: {fileID: 0}
     - target: {fileID: 2110343543967500495, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1793,7 +1793,7 @@ PrefabInstance:
         type: 3}
       propertyPath: iconSprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0e91368923ac98d4c9ab2a7f7757e0d3,
+      objectReference: {fileID: 21300012, guid: 20f25674b9512834f88938d45ed495d7,
         type: 3}
     - target: {fileID: 7545364183608891058, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1803,13 +1803,13 @@ PrefabInstance:
     - target: {fileID: 7545364183608891058, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7730299935254012266, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 0e91368923ac98d4c9ab2a7f7757e0d3,
+      objectReference: {fileID: 21300012, guid: 20f25674b9512834f88938d45ed495d7,
         type: 3}
     - target: {fileID: 7730299935254012266, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1826,6 +1826,16 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7916557576929228339, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2039997818}
+    - target: {fileID: 7916557576929228339, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
+        type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: toogleshowHandoutInsteadOfScene
+      objectReference: {fileID: 0}
     - target: {fileID: 8609693118658432602, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: iconStyle
@@ -1835,7 +1845,7 @@ PrefabInstance:
         type: 3}
       propertyPath: iconSprite
       value: 
-      objectReference: {fileID: 21300002, guid: 20f25674b9512834f88938d45ed495d7,
+      objectReference: {fileID: 21300008, guid: 20f25674b9512834f88938d45ed495d7,
         type: 3}
     - target: {fileID: 8793976224090999488, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1845,37 +1855,37 @@ PrefabInstance:
     - target: {fileID: 8793976224090999488, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: leavePresentation
+      value: showCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_text
-      value: Show Canvas
+      value: Leave Presentation
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842841, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8927709777571842919, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -1891,7 +1901,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300002, guid: 20f25674b9512834f88938d45ed495d7,
+      objectReference: {fileID: 21300008, guid: 20f25674b9512834f88938d45ed495d7,
         type: 3}
     - target: {fileID: 8975871081205046681, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -2333,6 +2343,8 @@ MonoBehaviour:
   menueMore: {fileID: 1757034192}
   menueGuest: {fileID: 1630294838}
   canvas: {fileID: 921010644}
+  appBarPrefab: {fileID: 1719503435862057140, guid: d7599b75e0d056f42a649e010cf5125d,
+    type: 3}
   photonConnectionScript: {fileID: 2039997821}
   isOwner: 0
   canvasRenderer: {fileID: 1235635887}

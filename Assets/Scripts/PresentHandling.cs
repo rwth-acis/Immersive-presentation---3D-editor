@@ -2,6 +2,9 @@
 using i5.Toolkit.Core.ServiceCore;
 using ImmersivePresentation;
 using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
+using Microsoft.MixedReality.Toolkit.UI;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -16,7 +19,7 @@ public class PresentHandling : MonoBehaviour
 {
 
     public  Presentation openPresentation;
-    private  int _stageIndex;
+    private int _stageIndex;
     public  int stageIndex
     {
         get
@@ -38,6 +41,7 @@ public class PresentHandling : MonoBehaviour
     public GameObject menueMore;
     public GameObject menueGuest;
     public GameObject canvas;
+    public GameObject appBarPrefab;
     public PhotonConnectionScript photonConnectionScript;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -48,6 +52,8 @@ public class PresentHandling : MonoBehaviour
 
     public Renderer canvasRenderer;
     public Material backupMaterial;
+
+    private bool showHandoutInsteadOfScene = false;
 
     /// <summary>
     /// Returns the stage that is the actual one at the moment
@@ -61,11 +67,28 @@ public class PresentHandling : MonoBehaviour
     }
 
     /// <summary>
+    /// Depending on wheather the scene or the handout is selected, it will be loaded.
+    /// </summary>
+    /// <param name="pStageIndex">Index of the stage to load the scene or the handout from.</param>
+    public async Task loadStage(int pStageIndex)
+    {
+        if (showHandoutInsteadOfScene)
+        {
+            await loadHandoutFromStage(pStageIndex);
+        }
+        else
+        {
+            await loadSceneFromStage(pStageIndex);
+        }
+    }
+
+    /// <summary>
     /// Loads the 3D Elements that are in the scene of the given stage that is defined by the stageIndex.
     /// </summary>
     /// <param name="pStageIndex">The index of the Stage from where the scene should be loaded.</param>
     public async Task loadSceneFromStage(int pStageIndex)
     {
+        stageIndex = pStageIndex;
         //clean old scene
         if (generadedGameObjects != null && generadedGameObjects.Count != 0)
         {
@@ -82,7 +105,6 @@ public class PresentHandling : MonoBehaviour
         //load new scene
         for (int i = 0; i < openPresentation.stages[pStageIndex].scene.elements.Count; i++)
         {
-            loadingIndicator.SetActive(true);
             Element3D curElement = openPresentation.stages[pStageIndex].scene.elements[i];
 #if UNITY_ANDROID
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
@@ -95,6 +117,63 @@ public class PresentHandling : MonoBehaviour
             obj.transform.localPosition = new Vector3((float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
             obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
+
+            generadedGameObjects.Add(obj);
+        }
+
+        //update the canvas
+        loadCanvas(pStageIndex);
+    }
+
+    /// <summary>
+    /// Loads the 3D Elements that are in the handout of the given stage that is defined by the stageIndex.
+    /// </summary>
+    /// <param name="pStageIndex">The index of the stage from where the handout should be loaded.</param>
+    /// <returns></returns>
+    public async Task loadHandoutFromStage(int pStageIndex)
+    {
+        stageIndex = pStageIndex;
+        //clean old scene
+        if (generadedGameObjects != null && generadedGameObjects.Count != 0)
+        {
+            foreach (GameObject obj in generadedGameObjects)
+            {
+                //actualSceneGameObjList.Remove(obj);
+                Destroy(obj);
+            }
+        }
+
+        //load obj from the new scene
+        generadedGameObjects = new List<GameObject>();
+
+        //load new scene
+        for (int i = 0; i < openPresentation.stages[pStageIndex].handout.elements.Count; i++)
+        {
+            Element3D curElement = openPresentation.stages[pStageIndex].handout.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#else
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#endif
+            obj.transform.parent = anchor.transform;
+            obj.transform.localPosition = new Vector3((float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
+            obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
+            obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
+
+            //Add bounds control
+            BoundsControl boundsControl;
+            boundsControl = obj.AddComponent<BoundsControl>();
+            boundsControl.BoundsControlActivation = BoundsControlActivationType.ActivateManually;
+
+            GameObject appBar = Instantiate(appBarPrefab);
+            AppBar appBarScript = appBar.GetComponent<AppBar>();
+            appBarScript.Target = obj.GetComponent<BoundsControl>();
+            generadedGameObjects.Add(appBar);
+
+            ObjectManipulator objMan;
+            objMan = obj.AddComponent<ObjectManipulator>();
 
             generadedGameObjects.Add(obj);
         }
@@ -337,4 +416,32 @@ public class PresentHandling : MonoBehaviour
         canvas.SetActive(true);
     }
 
+    public void setshowHandoutInsteadOfScene(bool pValue)
+    {
+        if(showHandoutInsteadOfScene != pValue)
+        {
+            showHandoutInsteadOfScene = pValue;
+            if (showHandoutInsteadOfScene)
+            {
+                loadHandoutFromStage(stageIndex);
+            }
+            else
+            {
+                loadSceneFromStage(stageIndex);
+            }
+        }
+    }
+
+    public void toogleshowHandoutInsteadOfScene()
+    {
+        showHandoutInsteadOfScene = !showHandoutInsteadOfScene;
+        if (showHandoutInsteadOfScene)
+        {
+            loadHandoutFromStage(stageIndex);
+        }
+        else
+        {
+            loadSceneFromStage(stageIndex);
+        }
+    }
 }
