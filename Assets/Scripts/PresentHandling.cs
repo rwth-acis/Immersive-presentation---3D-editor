@@ -444,4 +444,16 @@ public class PresentHandling : MonoBehaviour
             loadSceneFromStage(stageIndex);
         }
     }
+
+    public void toogleshowHandoutInsteadOfSceneForAllInPresentation()
+    {
+        if(!showHandoutInsteadOfScene == true)
+        {
+            photonConnectionScript.sendShowHandoutInsteadOfScene(1);
+        }
+        else
+        {
+            photonConnectionScript.sendShowHandoutInsteadOfScene(0);
+        }
+    }
 }
