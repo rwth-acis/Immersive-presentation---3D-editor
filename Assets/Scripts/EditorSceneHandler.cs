@@ -35,6 +35,10 @@ public class EditorSceneHandler : MonoBehaviour
 
     public GameObject appBarPrefab;
 
+    [SerializeField]
+    [Tooltip("Type of dialog that should be displayed when the user clicked he remove Button on a 3D Element.")]
+    public GameObject removeDialog;
+
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
@@ -179,6 +183,7 @@ public class EditorSceneHandler : MonoBehaviour
             //Add transformation sync
             SyncEditedTransformation syncT = obj.AddComponent<SyncEditedTransformation>() as SyncEditedTransformation;
             syncT.relatedElement = curElement;
+            syncT.removeDialog = removeDialog;
 
             //Add bounds control
             BoundsControl boundsControl;
@@ -189,6 +194,8 @@ public class EditorSceneHandler : MonoBehaviour
             AppBar appBarScript = appBar.GetComponent<AppBar>();
             appBarScript.Target = obj.GetComponent<BoundsControl>();
             pSceneGameObjList.Add(appBar);
+
+            syncT.relatedAppBar = appBar;
 
             ObjectManipulator objMan;
             objMan = obj.AddComponent<ObjectManipulator>();
@@ -241,6 +248,7 @@ public class EditorSceneHandler : MonoBehaviour
     /// </summary>
     public void savePresentation()
     {
+        loadingVisualizer.SetActive(true);
         File.WriteAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
 
         if (File.Exists(presentationSavingPath))
@@ -254,11 +262,13 @@ public class EditorSceneHandler : MonoBehaviour
 
     public void UploadSucceed()
     {
+        loadingVisualizer.SetActive(false);
         print("Upload Succeed");
     }
 
     public void UploadFailed(string msg)
     {
+        loadingVisualizer.SetActive(false);
         print("Upload Failed");
     }
 

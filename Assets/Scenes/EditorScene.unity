@@ -611,6 +611,8 @@ MonoBehaviour:
   loadingVisualizer: {fileID: 336381485}
   appBarPrefab: {fileID: 9177478684475929351, guid: 1b5436d06e1e5ba46a85550a0b2cbb47,
     type: 3}
+  removeDialog: {fileID: 2680377478557818543, guid: 8e686c90124b8e14cbf8093893109e9a,
+    type: 3}
 --- !u!114 &431946632
 MonoBehaviour:
   m_ObjectHideFlags: 0
