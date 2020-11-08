@@ -6,15 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/AzureSpatialAnchors.unity
+    guid: 19eb155a6cceb1c44a6dd713e718fc69
+  - enabled: 0
     path: Assets/Scenes/StartScene.unity
     guid: f23f10d425d8d5540a54b34eb6624ca9
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/WelcomeScene.unity
     guid: 37fe637ea900e3d4d931aaf68199f92d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/EditorScene.unity
     guid: cd934baf0c3c00c48877820760f0375b
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/PresentationScene.unity
     guid: f458347ba0ee14f42b26d12c1737bccc
   m_configObjects: {}
