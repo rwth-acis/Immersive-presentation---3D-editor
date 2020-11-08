@@ -89,6 +89,26 @@ public class AnchorModuleScript : MonoBehaviour
 
         Debug.Log("Azure session started successfully");
     }
+    public async Task StartAzureSessionAsync()
+    {
+        Debug.Log("\nAnchorModuleScript.StartAzureSession()");
+
+        // Notify AnchorFeedbackScript
+        OnStartASASession?.Invoke();
+
+        Debug.Log("Starting Azure session... please wait...");
+
+        if (cloudManager.Session == null)
+        {
+            // Creates a new session if one does not exist
+            await cloudManager.CreateSessionAsync();
+        }
+
+        // Starts the session if not already started
+        await cloudManager.StartSessionAsync();
+
+        Debug.Log("Azure session started successfully");
+    }
 
     public async void StopAzureSession()
     {
@@ -187,6 +207,91 @@ public class AnchorModuleScript : MonoBehaviour
         catch (Exception ex)
         {
             Debug.Log(ex.ToString());
+        }
+    }
+
+    public async Task<bool> CreateAzureAnchorAsync(GameObject theObject)
+    {
+        Debug.Log("\nAnchorModuleScript.CreateAzureAnchor()");
+
+        // Notify AnchorFeedbackScript
+        OnCreateAnchorStarted?.Invoke();
+
+        // First we create a native XR anchor at the location of the object in question
+        theObject.CreateNativeAnchor();
+
+        // Notify AnchorFeedbackScript
+        OnCreateLocalAnchor?.Invoke();
+
+        // Then we create a new local cloud anchor
+        CloudSpatialAnchor localCloudAnchor = new CloudSpatialAnchor();
+
+        // Now we set the local cloud anchor's position to the native XR anchor's position
+        localCloudAnchor.LocalAnchor = theObject.FindNativeAnchor().GetPointer();
+
+        // Check to see if we got the local XR anchor pointer
+        if (localCloudAnchor.LocalAnchor == IntPtr.Zero)
+        {
+            Debug.Log("Didn't get the local anchor...");
+            return false;
+        }
+        else
+        {
+            Debug.Log("Local anchor created");
+        }
+
+        // In this sample app we delete the cloud anchor explicitly, but here we show how to set an anchor to expire automatically
+        localCloudAnchor.Expiration = DateTimeOffset.Now.AddDays(7);
+
+        // Save anchor to cloud
+        while (!cloudManager.IsReadyForCreate)
+        {
+            await Task.Delay(330);
+            float createProgress = cloudManager.SessionStatus.RecommendedForCreateProgress;
+            QueueOnUpdate(new Action(() => Debug.Log($"Move your device to capture more environment data: {createProgress:0%}")));
+        }
+
+        bool success;
+
+        try
+        {
+            Debug.Log("Creating Azure anchor... please wait...");
+
+            // Actually save
+            await cloudManager.CreateAnchorAsync(localCloudAnchor);
+
+            // Store
+            currentCloudAnchor = localCloudAnchor;
+            localCloudAnchor = null;
+
+            // Success?
+            success = currentCloudAnchor != null;
+
+            if (success)
+            {
+                Debug.Log($"Azure anchor with ID '{currentCloudAnchor.Identifier}' created successfully");
+
+                // Notify AnchorFeedbackScript
+                OnCreateAnchorSucceeded?.Invoke();
+
+                // Update the current Azure anchor ID
+                Debug.Log($"Current Azure anchor ID updated to '{currentCloudAnchor.Identifier}'");
+                currentAzureAnchorID = currentCloudAnchor.Identifier;
+                return true;
+            }
+            else
+            {
+                Debug.Log($"Failed to save cloud anchor with ID '{currentAzureAnchorID}' to Azure");
+
+                // Notify AnchorFeedbackScript
+                OnCreateAnchorFailed?.Invoke();
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex.ToString());
+            return false;
         }
     }
 

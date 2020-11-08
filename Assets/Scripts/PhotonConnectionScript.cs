@@ -82,18 +82,18 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
             if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ANCHORID_PROPERTY_NAME, out azureSpatialAnchorIdHelper))
             {
                 //Load spatial anchor
-                await presentHandling.loadAnchorAsync((string)azureSpatialAnchorIdHelper);
+                //await presentHandling.loadAnchorAsync((string)azureSpatialAnchorIdHelper);
             }
             else
             {
                 //Create and upload spatial anchor
-                string anchorIdstring = await presentHandling.generateAnchorAsync();
-                PhotonNetwork.CurrentRoom.SetCustomProperties(
-                    new ExitGames.Client.Photon.Hashtable()
-                    {
-                        {ANCHORID_PROPERTY_NAME, anchorIdstring }
-                    }
-                    );
+                //string anchorIdstring = await presentHandling.generateAnchorAsync();
+                //PhotonNetwork.CurrentRoom.SetCustomProperties(
+                //    new ExitGames.Client.Photon.Hashtable()
+                //    {
+                //        {ANCHORID_PROPERTY_NAME, anchorIdstring }
+                //    }
+                //    );
             }
 
             //check for actualStage
@@ -180,9 +180,11 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
             if (propertiesThatChanged.ContainsKey(ANCHORID_PROPERTY_NAME))
             {
                 print("Anchor prop changed");
+                Debug.Log("\nProperties Changed in Photon.");
                 object anchorIdHelper = null;
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ANCHORID_PROPERTY_NAME, out anchorIdHelper))
                 {
+                    Debug.Log("\n Calling Loading with anchor id: " + (string)anchorIdHelper);
                     await presentHandling.loadAnchorAsync((string)anchorIdHelper);
                     presentHandling.loadingIndicator.SetActive(false);
                 }
@@ -236,12 +238,14 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
 
     public void sendAnchorId(string pAnchorId)
     {
+        Debug.Log("send AnchorId start");
         PhotonNetwork.CurrentRoom.SetCustomProperties(
                     new ExitGames.Client.Photon.Hashtable()
                     {
-                        {STAGE_INDEX_PROPERTY_NAME, pAnchorId }
+                        {ANCHORID_PROPERTY_NAME, pAnchorId }
                     }
                     );
+        Debug.Log("send AnchorId end");
     }
 
     public void sendShowHandoutInsteadOfScene(int pGlobalShowHandout)

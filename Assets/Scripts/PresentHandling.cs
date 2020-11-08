@@ -1,6 +1,7 @@
 ﻿using i5.Toolkit.Core.ModelImporters;
 using i5.Toolkit.Core.ServiceCore;
 using ImmersivePresentation;
+using Microsoft.Azure.SpatialAnchors.Unity;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
@@ -43,6 +44,9 @@ public class PresentHandling : MonoBehaviour
     public GameObject canvas;
     public GameObject appBarPrefab;
     public PhotonConnectionScript photonConnectionScript;
+
+    public SpatialAnchorManager spatialAnchorManager;
+    public AnchorModuleScript anchorModuleScript;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
@@ -376,9 +380,9 @@ public class PresentHandling : MonoBehaviour
 
     public async Task loadAnchorAsync(string anchorID)
     {
-        anchor.SetActive(true);
-        anchorAppBar.SetActive(true);
-        print("Anchor loaded async");
+        Debug.Log("\nLoading an incoming anchor");
+        await anchorModuleScript.StartAzureSessionAsync();
+        anchorModuleScript.FindAzureAnchor(anchorID);
     }
 
     void Update()
@@ -455,5 +459,32 @@ public class PresentHandling : MonoBehaviour
         {
             photonConnectionScript.sendShowHandoutInsteadOfScene(0);
         }
+    }
+
+    public async void saveASAnchor()
+    {
+        await anchorModuleScript.StartAzureSessionAsync();
+
+        bool anchorSaved = await anchorModuleScript.CreateAzureAnchorAsync(anchor);
+
+        if (anchorSaved)
+        {
+            Debug.Log("\nSending anchor to photon.");
+            //send anchorId in photonRoom
+            if (photonConnectionScript == null) Debug.Log("photonConn Null");
+            if (anchorModuleScript == null) Debug.Log("anchorModuleScript Null");
+            if (anchorModuleScript.currentAzureAnchorID == null) Debug.Log("currentAzureAnchorID Null");
+            photonConnectionScript.sendAnchorId(anchorModuleScript.currentAzureAnchorID);
+            Debug.Log("\nSend To Photon Succeded.");
+        }
+        else
+        {
+            Debug.Log("\nBool for saving was false.");
+        }
+    }
+
+    public void loadAsAnchor(string anchorId)
+    {
+
     }
 }
