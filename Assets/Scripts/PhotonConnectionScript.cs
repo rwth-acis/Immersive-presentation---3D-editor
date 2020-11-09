@@ -185,7 +185,7 @@ public class PhotonConnectionScript : MonoBehaviourPunCallbacks
                 if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(ANCHORID_PROPERTY_NAME, out anchorIdHelper))
                 {
                     Debug.Log("\n Calling Loading with anchor id: " + (string)anchorIdHelper);
-                    await presentHandling.loadAnchorAsync((string)anchorIdHelper);
+                    presentHandling.openAcceptSpatialAnchorDialog((string)anchorIdHelper);
                     presentHandling.loadingIndicator.SetActive(false);
                 }
             }

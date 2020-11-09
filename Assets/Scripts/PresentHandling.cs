@@ -3,6 +3,7 @@ using i5.Toolkit.Core.ServiceCore;
 using ImmersivePresentation;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.Toolkit.Experimental.Dialog;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
 using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
 using Microsoft.MixedReality.Toolkit.UI;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -47,6 +49,10 @@ public class PresentHandling : MonoBehaviour
 
     public SpatialAnchorManager spatialAnchorManager;
     public AnchorModuleScript anchorModuleScript;
+    [SerializeField]
+    [Tooltip("The Dialog that appears when a new spatial anchor appears in the photon room.")]
+    public GameObject spatialAnchorDialog;
+    public TextMeshPro feebacktext;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
@@ -58,6 +64,10 @@ public class PresentHandling : MonoBehaviour
     public Material backupMaterial;
 
     private bool showHandoutInsteadOfScene = false;
+    /// <summary>
+    /// Stores the anchorId because the Dialog can not contain this information.
+    /// </summary>
+    private string anchorIdHeper;
 
     /// <summary>
     /// Returns the stage that is the actual one at the moment
@@ -481,10 +491,28 @@ public class PresentHandling : MonoBehaviour
         {
             Debug.Log("\nBool for saving was false.");
         }
+        feebacktext.SetText("");
     }
 
-    public void loadAsAnchor(string anchorId)
+    public void openAcceptSpatialAnchorDialog(string anchorId)
     {
+        anchorIdHeper = anchorId;
+        Dialog myDialog = Dialog.Open(spatialAnchorDialog, DialogButtonType.Yes | DialogButtonType.No, "A new spatial anchor has been supmitted by the owner.", "Do you want to load the anchor?", true);
+        if (myDialog != null)
+        {
+            myDialog.OnClosed += OnClosedAnchorDialogEvent;
+        }
+    }
 
+    private void OnClosedAnchorDialogEvent(DialogResult obj)
+    {
+        if (obj.Result == DialogButtonType.Yes)
+        {
+            loadAnchorAsync(anchorIdHeper);
+        }
+        else if (obj.Result == DialogButtonType.No)
+        {
+            
+        }
     }
 }

@@ -8,6 +8,7 @@ using UnityEngine.Networking;
 using Microsoft.Azure.SpatialAnchors;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using RestSharp;
+using TMPro;
 
 #if WINDOWS_UWP
 using Windows.Storage;
@@ -18,6 +19,10 @@ public class AnchorModuleScript : MonoBehaviour
     [SerializeField]
     [Tooltip("The unique identifier used to identify the shared file (containing the Azure anchor ID) on the web server.")]
     private string publicSharingPin = "1982734901747";
+
+    [SerializeField]
+    [Tooltip("The Text where the progress of the anchor creation is presented.")]
+    public TextMeshPro PercentageText;
 
     [HideInInspector]
     // Anchor ID for anchor stored in Azure (provided by Azure) 
@@ -248,7 +253,15 @@ public class AnchorModuleScript : MonoBehaviour
         {
             await Task.Delay(330);
             float createProgress = cloudManager.SessionStatus.RecommendedForCreateProgress;
-            QueueOnUpdate(new Action(() => Debug.Log($"Move your device to capture more environment data: {createProgress:0%}")));
+            if(PercentageText == null)
+            {
+                QueueOnUpdate(new Action(() => Debug.Log($"Move your device to capture more environment data: {createProgress:0%}")));
+            }
+            else
+            {
+                QueueOnUpdate(new Action(() =>PercentageText.SetText($"{createProgress:0%}")));
+            }
+            
         }
 
         bool success;
@@ -277,6 +290,7 @@ public class AnchorModuleScript : MonoBehaviour
                 // Update the current Azure anchor ID
                 Debug.Log($"Current Azure anchor ID updated to '{currentCloudAnchor.Identifier}'");
                 currentAzureAnchorID = currentCloudAnchor.Identifier;
+                if (PercentageText != null) PercentageText.SetText("");
                 return true;
             }
             else
@@ -285,12 +299,14 @@ public class AnchorModuleScript : MonoBehaviour
 
                 // Notify AnchorFeedbackScript
                 OnCreateAnchorFailed?.Invoke();
+                if (PercentageText != null) PercentageText.SetText("");
                 return false;
             }
         }
         catch (Exception ex)
         {
             Debug.Log(ex.ToString());
+            if (PercentageText != null) PercentageText.SetText("");
             return false;
         }
     }

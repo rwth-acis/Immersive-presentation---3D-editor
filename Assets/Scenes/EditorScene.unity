@@ -782,6 +782,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonFive
       objectReference: {fileID: 0}
+    - target: {fileID: 428037904147495596, guid: e969038e4d67d9b498de2ef538969506,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 428037904632747520, guid: e969038e4d67d9b498de2ef538969506,
         type: 3}
       propertyPath: m_IsActive
