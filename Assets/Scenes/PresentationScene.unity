@@ -3080,7 +3080,7 @@ PrefabInstance:
         type: 3}
       propertyPath: iconSprite
       value: 
-      objectReference: {fileID: 21300000, guid: 650863cf37e1c034faf167a051cdd361,
+      objectReference: {fileID: 21300000, guid: bb20dc7acd54b534ba68a2f296165a2b,
         type: 3}
     - target: {fileID: 8793976224090999488, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -3148,7 +3148,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 650863cf37e1c034faf167a051cdd361,
+      objectReference: {fileID: 21300000, guid: bb20dc7acd54b534ba68a2f296165a2b,
         type: 3}
     - target: {fileID: 8975871081205046681, guid: 9a7c24f281a2c3d45a9b8befe608bf77,
         type: 3}
@@ -3453,6 +3453,7 @@ MonoBehaviour:
   anchorModuleScript: {fileID: 538335360}
   spatialAnchorDialog: {fileID: 2680377478557818543, guid: 8e686c90124b8e14cbf8093893109e9a,
     type: 3}
+  feebacktext: {fileID: 0}
   isOwner: 0
   canvasRenderer: {fileID: 1235635887}
   backupMaterial: {fileID: 2100000, guid: b878bfaf05606434b90193d3415d4b5a, type: 2}
