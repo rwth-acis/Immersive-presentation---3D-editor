@@ -9,9 +9,17 @@ using UnityEngine.Networking;
 using System;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using Microsoft.MixedReality.Toolkit.UI;
+using i5.Toolkit.Core.OpenIDConnectClient;
+using i5.Toolkit.Core.ServiceCore;
+using i5.Toolkit.Core.Utilities;
 
 public class WelcomeSceneHandler : MonoBehaviour
 {
+    [SerializeField]
+    private ClientDataObject learningLayersClientData;
+
+    private bool isSubscribedToOidc = false;
+
     public TMP_InputField email;
     public TMP_InputField password;
     public TMP_InputField joinInput;
@@ -139,6 +147,37 @@ public class WelcomeSceneHandler : MonoBehaviour
 
         SceneManager.LoadScene("Scenes/EditorScene", LoadSceneMode.Additive);
         SceneManager.UnloadSceneAsync("WelcomeScene");
+    }
+    public void LoginLearningLayers()
+    {
+        loginstarted = true;
+        LoginLoader.SetActive(true);
+
+        LearningLayersOIDCProvider provider = new LearningLayersOIDCProvider();
+        provider.ClientData = learningLayersClientData.clientData;
+        ServiceManager.GetService<OpenIDConnectService>().OidcProvider = provider;
+
+        // only subscribe to the event if it was not yet done before, e.g. in a failed login attempt
+        if (!isSubscribedToOidc)
+        {
+            ServiceManager.GetService<OpenIDConnectService>().LoginCompleted += OpenIDConnect_LoginCompleted;
+            isSubscribedToOidc = true;
+        }
+        ServiceManager.GetService<OpenIDConnectService>().OpenLoginPage();
+    }
+
+    private async void OpenIDConnect_LoginCompleted(object sender, System.EventArgs e)
+    {
+        i5Debug.Log("Login completed", this);
+        i5Debug.Log(ServiceManager.GetService<OpenIDConnectService>().AccessToken, this);
+        ServiceManager.GetService<OpenIDConnectService>().LoginCompleted -= OpenIDConnect_LoginCompleted;
+        isSubscribedToOidc = false;
+
+
+        IUserInfo userInfo = await ServiceManager.GetService<OpenIDConnectService>().GetUserDataAsync();
+        i5Debug.Log("Currently logged in user: " + userInfo.FullName
+            + " (username: " + userInfo.Username + ") with the mail address " + userInfo.Email, this);
+        BackendConnection.BC.authOpenIDConnect(userInfo.Email, LoginSucceed, LoginFailed);
     }
 
     public void terminateApplication()

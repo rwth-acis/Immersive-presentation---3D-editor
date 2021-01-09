@@ -46,6 +46,32 @@ public class BackendConnection : MonoBehaviour
         }
     }
 
+    public void authOpenIDConnect(string email, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeAuthOpenIDConnectRequest(email, callbackOnSuccess, callbackOnFail));
+    }
+    IEnumerator MakeAuthOpenIDConnectRequest(string email, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("email", email);
+        UnityWebRequest request = UnityWebRequest.Post(baseurl + "/auth/openid", form);
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            LoginResponse output = JsonConvert.DeserializeObject<LoginResponse>(request.downloadHandler.text);
+            loggedIn = true;
+            token = output.token;
+            exp = output.exp;
+            userId = output.user.iduser;
+            callbackOnSuccess?.Invoke(output);
+        }
+    }
+
     public void LoadPresList(UnityAction<ListResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
         StartCoroutine(MakePresListRequest(callbackOnSuccess, callbackOnFail));
