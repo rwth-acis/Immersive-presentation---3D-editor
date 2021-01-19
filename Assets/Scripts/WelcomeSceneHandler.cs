@@ -177,7 +177,7 @@ public class WelcomeSceneHandler : MonoBehaviour
         IUserInfo userInfo = await ServiceManager.GetService<OpenIDConnectService>().GetUserDataAsync();
         i5Debug.Log("Currently logged in user: " + userInfo.FullName
             + " (username: " + userInfo.Username + ") with the mail address " + userInfo.Email, this);
-        BackendConnection.BC.authOpenIDConnect(userInfo.Email, LoginSucceed, LoginFailed);
+        BackendConnection.BC.authOpenIDConnect(userInfo.Email, ServiceManager.GetService<OpenIDConnectService>().AccessToken, LoginSucceed, LoginFailed);
     }
 
     public void terminateApplication()

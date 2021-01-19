@@ -46,14 +46,15 @@ public class BackendConnection : MonoBehaviour
         }
     }
 
-    public void authOpenIDConnect(string email, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    public void authOpenIDConnect(string email, string accessToken, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
-        StartCoroutine(MakeAuthOpenIDConnectRequest(email, callbackOnSuccess, callbackOnFail));
+        StartCoroutine(MakeAuthOpenIDConnectRequest(email, accessToken, callbackOnSuccess, callbackOnFail));
     }
-    IEnumerator MakeAuthOpenIDConnectRequest(string email, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    IEnumerator MakeAuthOpenIDConnectRequest(string email, string accessToken, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
         WWWForm form = new WWWForm();
         form.AddField("email", email);
+        form.AddField("accesstoken", accessToken);
         UnityWebRequest request = UnityWebRequest.Post(baseurl + "/auth/openid", form);
         yield return request.SendWebRequest();
 
