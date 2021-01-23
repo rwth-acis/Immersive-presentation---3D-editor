@@ -12,7 +12,7 @@ public class BackendConnection : MonoBehaviour
     //Use the Singelton Best Practice
     public static BackendConnection BC;
 
-    private string baseurl = "http://binarybros.de";
+    private string baseurl = "https://cloud19.dbis.rwth-aachen.de";
 
     public bool loggedIn = false;
     private string token;
