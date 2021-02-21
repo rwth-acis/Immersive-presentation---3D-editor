@@ -15,6 +15,7 @@ The 2D editor part can be found in [this repository](https://github.com/rwth-aci
 
 This repository contains the 3D editor.
 
+
 The backend that connects all parts can be found in [this repository](https://github.com/rwth-acis\Immersive-presentation---Backend-Coordinator).
 
 ## Getting started
