@@ -15,22 +15,11 @@ using UnityEngine.SceneManagement;
 
 public class EditorSceneHandler : MonoBehaviour
 {
-    public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
-    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
-    public const string tempSuffix = "ImPres3D\\presentation\\";
-    public const string presentationJsonFilename = "presentation.json";
-    public const string tempSub2D = "2DMedia\\";
-    public const string tempSub3D = "3DMedia\\";
-    public const string tempSubSubScene = "Scene\\";
-    public const string tempSubSubHandout = "Handout\\";
-
-    public const string tempSaveSuffix = "ImPres3D\\save\\";
-
     public string presentationSavingPath
     {
         get
         {
-            return StaticInformation.tempDirBase + tempSaveSuffixAndFilename;
+            return StaticInformation.tempDirBase + StaticInformation.tempSaveSuffixAndFilename;
         }
     }
 
@@ -45,6 +34,10 @@ public class EditorSceneHandler : MonoBehaviour
     public GameObject loadingVisualizer;
 
     public GameObject appBarPrefab;
+
+    [SerializeField]
+    [Tooltip("Type of dialog that should be displayed when the user clicked he remove Button on a 3D Element.")]
+    public GameObject removeDialog;
 
     //private DataSerializer dataSerializer = new DataSerializer();
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
@@ -116,7 +109,7 @@ public class EditorSceneHandler : MonoBehaviour
 
         //Deserialize json
         //*StaticInformation.openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
-        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + presentationJsonFilename), jsonSettings);
+        StaticInformation.openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename), jsonSettings);
     }
 
     /// <summary>
@@ -161,10 +154,10 @@ public class EditorSceneHandler : MonoBehaviour
         createCleanDirectory(StaticInformation.tempSaveDir);
         createCleanDirectory(StaticInformation.tempDownloadDir);
         createCleanDirectory(StaticInformation.tempPresDir);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub2D);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubScene);
-        createCleanDirectory(StaticInformation.tempPresDir + tempSub3D + tempSubSubHandout);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub2D);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D + StaticInformation.tempSubSubScene);
+        createCleanDirectory(StaticInformation.tempPresDir + StaticInformation.tempSub3D + StaticInformation.tempSubSubHandout);
     }
 
     /// <summary>
@@ -177,7 +170,11 @@ public class EditorSceneHandler : MonoBehaviour
         for (int i = 0; i < pScene.elements.Count; i++)
         {
             Element3D curElement = pScene.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+#else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+#endif
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
@@ -186,6 +183,7 @@ public class EditorSceneHandler : MonoBehaviour
             //Add transformation sync
             SyncEditedTransformation syncT = obj.AddComponent<SyncEditedTransformation>() as SyncEditedTransformation;
             syncT.relatedElement = curElement;
+            syncT.removeDialog = removeDialog;
 
             //Add bounds control
             BoundsControl boundsControl;
@@ -196,6 +194,8 @@ public class EditorSceneHandler : MonoBehaviour
             AppBar appBarScript = appBar.GetComponent<AppBar>();
             appBarScript.Target = obj.GetComponent<BoundsControl>();
             pSceneGameObjList.Add(appBar);
+
+            syncT.relatedAppBar = appBar;
 
             ObjectManipulator objMan;
             objMan = obj.AddComponent<ObjectManipulator>();
@@ -248,7 +248,8 @@ public class EditorSceneHandler : MonoBehaviour
     /// </summary>
     public void savePresentation()
     {
-        File.WriteAllText(StaticInformation.tempPresDir + presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
+        loadingVisualizer.SetActive(true);
+        File.WriteAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename, JsonConvert.SerializeObject(StaticInformation.openPresentation, jsonSettings));
 
         if (File.Exists(presentationSavingPath))
         {
@@ -261,11 +262,13 @@ public class EditorSceneHandler : MonoBehaviour
 
     public void UploadSucceed()
     {
+        loadingVisualizer.SetActive(false);
         print("Upload Succeed");
     }
 
     public void UploadFailed(string msg)
     {
+        loadingVisualizer.SetActive(false);
         print("Upload Failed");
     }
 

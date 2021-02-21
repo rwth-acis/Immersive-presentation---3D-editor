@@ -7,8 +7,24 @@ using UnityEngine;
 
 public static class StaticInformation
 {
-    public static string tempDirBase { get; set; } //Path to the start of the temporary folder of the actual windows user 
+    public static string tempDirBase
+    {
+        get
+        {
+            return Application.persistentDataPath;
+        }
+
+        set
+        {
+
+        }
+    }
+    //Path to the start of the temporary folder of the actual windows user 
+#if UNITY_ANDROID
+    public const string tempDownloadSuffix = "/ImPres3D/downloads/";
+#else
     public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
+#endif
     public static string tempDownloadDir
     {
         get
@@ -17,7 +33,11 @@ public static class StaticInformation
         }
     } //Path where the presentations are downloaded to.
 
+#if UNITY_ANDROID
+    public const string tempSuffix = "/ImPres3D/presentation/";
+#else
     public const string tempSuffix = "ImPres3D\\presentation\\";
+#endif
     public static string tempPresDir
     {
         get
@@ -26,12 +46,42 @@ public static class StaticInformation
         }
     } //Path where the presentation content is stored and the json of the presentation.
     public const string presentationJsonFilename = "presentation.json";
+#if UNITY_ANDROID
+    public const string tempSub2D = "2DMedia/";
+#else
     public const string tempSub2D = "2DMedia\\";
+#endif
+#if UNITY_ANDROID
+    public const string tempSub3D = "3DMedia/";
+#else
     public const string tempSub3D = "3DMedia\\";
+#endif
+#if UNITY_ANDROID
+    public const string tempSubSubScene = "Scene/";
+#else
     public const string tempSubSubScene = "Scene\\";
+#endif
+#if UNITY_ANDROID
+    public const string tempSubSubHandout = "Handout/";
+#else
     public const string tempSubSubHandout = "Handout\\";
+#endif
 
+#if UNITY_ANDROID
+    public const string tempSaveSuffix = "/ImPres3D/save/";
+#else
     public const string tempSaveSuffix = "ImPres3D\\save\\";
+#endif
+#if UNITY_ANDROID
+    public const string tempSaveSuffixAndFilename = "/ImPres3D/save/presentation.pres";
+#else
+    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
+#endif
+#if UNITY_ANDROID
+    public const string tempSubCanvasImg = "/CanvasImg/";
+#else
+    public const string tempSubCanvasImg = "CanvasImg\\";
+#endif
     public static string tempSaveDir
     {
         get

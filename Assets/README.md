@@ -13,7 +13,8 @@ The System consists of 3 parts.
 
 The 2D editor part can be found in [this repository](https://github.com/rwth-acis/Immersive-presentation---2D-editor).
 
-This repository caontains the 3D editor part..
+This repository contains the 3D editor.
+
 
 The backend that connects all parts can be found in [this repository](https://github.com/rwth-acis\Immersive-presentation---Backend-Coordinator).
 

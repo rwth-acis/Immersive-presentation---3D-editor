@@ -12,7 +12,7 @@ public class BackendConnection : MonoBehaviour
     //Use the Singelton Best Practice
     public static BackendConnection BC;
 
-    private string baseurl = "http://binarybros.de";
+    private string baseurl = "https://cloud19.dbis.rwth-aachen.de";
 
     public bool loggedIn = false;
     private string token;
@@ -32,6 +32,33 @@ public class BackendConnection : MonoBehaviour
         yield return request.SendWebRequest();
 
         if(request.isNetworkError || request.isHttpError)
+        {
+            callbackOnFail?.Invoke(request.error);
+        }
+        else
+        {
+            LoginResponse output = JsonConvert.DeserializeObject<LoginResponse>(request.downloadHandler.text);
+            loggedIn = true;
+            token = output.token;
+            exp = output.exp;
+            userId = output.user.iduser;
+            callbackOnSuccess?.Invoke(output);
+        }
+    }
+
+    public void authOpenIDConnect(string email, string accessToken, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        StartCoroutine(MakeAuthOpenIDConnectRequest(email, accessToken, callbackOnSuccess, callbackOnFail));
+    }
+    IEnumerator MakeAuthOpenIDConnectRequest(string email, string accessToken, UnityAction<LoginResponse> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("email", email);
+        form.AddField("accesstoken", accessToken);
+        UnityWebRequest request = UnityWebRequest.Post(baseurl + "/auth/openid", form);
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
         {
             callbackOnFail?.Invoke(request.error);
         }

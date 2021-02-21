@@ -1,7 +1,12 @@
 ﻿using i5.Toolkit.Core.ModelImporters;
 using i5.Toolkit.Core.ServiceCore;
 using ImmersivePresentation;
+using Microsoft.Azure.SpatialAnchors.Unity;
 using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.Toolkit.Experimental.Dialog;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControl;
+using Microsoft.MixedReality.Toolkit.Experimental.UI.BoundsControlTypes;
+using Microsoft.MixedReality.Toolkit.UI;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -9,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +22,7 @@ public class PresentHandling : MonoBehaviour
 {
 
     public  Presentation openPresentation;
-    private  int _stageIndex;
+    private int _stageIndex;
     public  int stageIndex
     {
         get
@@ -37,13 +43,31 @@ public class PresentHandling : MonoBehaviour
     public GameObject menueOwner;
     public GameObject menueMore;
     public GameObject menueGuest;
+    public GameObject canvas;
+    public GameObject appBarPrefab;
     public PhotonConnectionScript photonConnectionScript;
+
+    public SpatialAnchorManager spatialAnchorManager;
+    public AnchorModuleScript anchorModuleScript;
+    [SerializeField]
+    [Tooltip("The Dialog that appears when a new spatial anchor appears in the photon room.")]
+    public GameObject spatialAnchorDialog;
+    public TextMeshPro feebacktext;
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
     public const string presentationJsonFilename = "presentation.json";
 
     public bool isOwner = false;
+
+    public Renderer canvasRenderer;
+    public Material backupMaterial;
+
+    private bool showHandoutInsteadOfScene = false;
+    /// <summary>
+    /// Stores the anchorId because the Dialog can not contain this information.
+    /// </summary>
+    private string anchorIdHeper;
 
     /// <summary>
     /// Returns the stage that is the actual one at the moment
@@ -57,11 +81,28 @@ public class PresentHandling : MonoBehaviour
     }
 
     /// <summary>
+    /// Depending on wheather the scene or the handout is selected, it will be loaded.
+    /// </summary>
+    /// <param name="pStageIndex">Index of the stage to load the scene or the handout from.</param>
+    public async Task loadStage(int pStageIndex)
+    {
+        if (showHandoutInsteadOfScene)
+        {
+            await loadHandoutFromStage(pStageIndex);
+        }
+        else
+        {
+            await loadSceneFromStage(pStageIndex);
+        }
+    }
+
+    /// <summary>
     /// Loads the 3D Elements that are in the scene of the given stage that is defined by the stageIndex.
     /// </summary>
     /// <param name="pStageIndex">The index of the Stage from where the scene should be loaded.</param>
     public async Task loadSceneFromStage(int pStageIndex)
     {
+        stageIndex = pStageIndex;
         //clean old scene
         if (generadedGameObjects != null && generadedGameObjects.Count != 0)
         {
@@ -79,7 +120,13 @@ public class PresentHandling : MonoBehaviour
         for (int i = 0; i < openPresentation.stages[pStageIndex].scene.elements.Count; i++)
         {
             Element3D curElement = openPresentation.stages[pStageIndex].scene.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#endif
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3((float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
             obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
@@ -87,11 +134,89 @@ public class PresentHandling : MonoBehaviour
 
             generadedGameObjects.Add(obj);
         }
+
+        //update the canvas
+        loadCanvas(pStageIndex);
+    }
+
+    /// <summary>
+    /// Loads the 3D Elements that are in the handout of the given stage that is defined by the stageIndex.
+    /// </summary>
+    /// <param name="pStageIndex">The index of the stage from where the handout should be loaded.</param>
+    /// <returns></returns>
+    public async Task loadHandoutFromStage(int pStageIndex)
+    {
+        stageIndex = pStageIndex;
+        //clean old scene
+        if (generadedGameObjects != null && generadedGameObjects.Count != 0)
+        {
+            foreach (GameObject obj in generadedGameObjects)
+            {
+                //actualSceneGameObjList.Remove(obj);
+                Destroy(obj);
+            }
+        }
+
+        //load obj from the new scene
+        generadedGameObjects = new List<GameObject>();
+
+        //load new scene
+        for (int i = 0; i < openPresentation.stages[pStageIndex].handout.elements.Count; i++)
+        {
+            Element3D curElement = openPresentation.stages[pStageIndex].handout.elements[i];
+#if UNITY_ANDROID
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#else
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
+#endif
+            obj.transform.parent = anchor.transform;
+            obj.transform.localPosition = new Vector3((float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);
+            obj.transform.localScale = new Vector3((float)curElement.xScale, (float)curElement.yScale, (float)curElement.zScale);
+            obj.transform.Rotate((float)curElement.xRotation, (float)curElement.yRotation, (float)curElement.zRotation, Space.Self);
+
+            //Add bounds control
+            BoundsControl boundsControl;
+            boundsControl = obj.AddComponent<BoundsControl>();
+            boundsControl.BoundsControlActivation = BoundsControlActivationType.ActivateManually;
+
+            GameObject appBar = Instantiate(appBarPrefab);
+            AppBar appBarScript = appBar.GetComponent<AppBar>();
+            appBarScript.Target = obj.GetComponent<BoundsControl>();
+            generadedGameObjects.Add(appBar);
+
+            ObjectManipulator objMan;
+            objMan = obj.AddComponent<ObjectManipulator>();
+
+            generadedGameObjects.Add(obj);
+        }
+
+        //update the canvas
+        loadCanvas(pStageIndex);
+    }
+
+    private void loadCanvas(int pStageIndex)
+    {
+        //the images as in the subfolder CanvasImg/[pStageIndex].png
+        string potentialCanvasImgPath = StaticInformation.tempPresDir + StaticInformation.tempSubCanvasImg + pStageIndex + ".png";
+
+        if (File.Exists(potentialCanvasImgPath))
+        {
+            var bytes = System.IO.File.ReadAllBytes(potentialCanvasImgPath);
+            var tex = new Texture2D(1, 1);
+            tex.LoadImage(bytes);
+            canvasRenderer.material.mainTexture = tex;
+        }
+        else
+        {
+            canvasRenderer.material = backupMaterial;
+        }
     }
 
     private void createWorkingDir()
     {
-        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        StaticInformation.tempDirBase = Application.persistentDataPath;
         createCleanDirectory(StaticInformation.tempSaveDir);
         createCleanDirectory(StaticInformation.tempDownloadDir);
         createCleanDirectory(StaticInformation.tempPresDir);
@@ -265,9 +390,9 @@ public class PresentHandling : MonoBehaviour
 
     public async Task loadAnchorAsync(string anchorID)
     {
-        anchor.SetActive(true);
-        anchorAppBar.SetActive(true);
-        print("Anchor loaded async");
+        Debug.Log("\nLoading an incoming anchor");
+        await anchorModuleScript.StartAzureSessionAsync();
+        anchorModuleScript.FindAzureAnchor(anchorID);
     }
 
     void Update()
@@ -279,7 +404,7 @@ public class PresentHandling : MonoBehaviour
     {
         //Load zip extracted in temp
         string filePath = path;
-        StaticInformation.tempDirBase = Path.GetTempPath().ToString();
+        StaticInformation.tempDirBase = Application.persistentDataPath;
         createCleanDirectory(StaticInformation.tempPresDir);
         ZipFile.ExtractToDirectory(filePath, StaticInformation.tempPresDir);
 
@@ -300,4 +425,94 @@ public class PresentHandling : MonoBehaviour
         print(msg);
     }
 
+    public void showCanvas()
+    {
+        canvas.SetActive(true);
+    }
+
+    public void setshowHandoutInsteadOfScene(bool pValue)
+    {
+        if(showHandoutInsteadOfScene != pValue)
+        {
+            showHandoutInsteadOfScene = pValue;
+            if (showHandoutInsteadOfScene)
+            {
+                loadHandoutFromStage(stageIndex);
+            }
+            else
+            {
+                loadSceneFromStage(stageIndex);
+            }
+        }
+    }
+
+    public void toogleshowHandoutInsteadOfScene()
+    {
+        showHandoutInsteadOfScene = !showHandoutInsteadOfScene;
+        if (showHandoutInsteadOfScene)
+        {
+            loadHandoutFromStage(stageIndex);
+        }
+        else
+        {
+            loadSceneFromStage(stageIndex);
+        }
+    }
+
+    public void toogleshowHandoutInsteadOfSceneForAllInPresentation()
+    {
+        if(!showHandoutInsteadOfScene == true)
+        {
+            photonConnectionScript.sendShowHandoutInsteadOfScene(1);
+        }
+        else
+        {
+            photonConnectionScript.sendShowHandoutInsteadOfScene(0);
+        }
+    }
+
+    public async void saveASAnchor()
+    {
+        await anchorModuleScript.StartAzureSessionAsync();
+
+        bool anchorSaved = await anchorModuleScript.CreateAzureAnchorAsync(anchor);
+
+        if (anchorSaved)
+        {
+            Debug.Log("\nSending anchor to photon.");
+            //send anchorId in photonRoom
+            if (photonConnectionScript == null) Debug.Log("photonConn Null");
+            if (anchorModuleScript == null) Debug.Log("anchorModuleScript Null");
+            if (anchorModuleScript.currentAzureAnchorID == null) Debug.Log("currentAzureAnchorID Null");
+            photonConnectionScript.sendAnchorId(anchorModuleScript.currentAzureAnchorID);
+            Debug.Log("\nSend To Photon Succeded.");
+        }
+        else
+        {
+            Debug.Log("\nBool for saving was false.");
+        }
+        feebacktext.SetText("");
+    }
+
+    public void openAcceptSpatialAnchorDialog(string anchorId)
+    {
+        anchorIdHeper = anchorId;
+        Dialog myDialog = Dialog.Open(spatialAnchorDialog, DialogButtonType.Yes | DialogButtonType.No, "A new spatial anchor has been supmitted by the owner.", "Do you want to load the anchor?", true);
+        if (myDialog != null)
+        {
+            myDialog.OnClosed += OnClosedAnchorDialogEvent;
+        }
+    }
+
+    private void OnClosedAnchorDialogEvent(DialogResult obj)
+    {
+        if (obj.Result == DialogButtonType.Yes)
+        {
+            loadAnchorAsync(anchorIdHeper);
+        }
+        else if (obj.Result == DialogButtonType.No)
+        {
+            
+        }
+    }
 }
