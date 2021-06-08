@@ -153,10 +153,11 @@ public class WelcomeSceneHandler : MonoBehaviour
         loginstarted = true;
         LoginLoader.SetActive(true);
 
-        LearningLayersOIDCProvider provider = new LearningLayersOIDCProvider();
+        LearningLayersOidcProvider provider = new LearningLayersOidcProvider();
         provider.ClientData = learningLayersClientData.clientData;
         ServiceManager.GetService<OpenIDConnectService>().OidcProvider = provider;
 
+        ServiceManager.GetService<OpenIDConnectService>().RedirectURI = "i5:/";
         // only subscribe to the event if it was not yet done before, e.g. in a failed login attempt
         if (!isSubscribedToOidc)
         {

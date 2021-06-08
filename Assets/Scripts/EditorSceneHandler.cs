@@ -171,7 +171,9 @@ public class EditorSceneHandler : MonoBehaviour
         {
             Element3D curElement = pScene.elements[i];
 #if UNITY_ANDROID
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            // LLUPD GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            
 #else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
 #endif

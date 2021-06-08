@@ -6,7 +6,7 @@ public class OpenIDConnectBootstrapper : BaseServiceBootstrapper
     protected override void RegisterServices()
     {
         OpenIDConnectService oidc = new OpenIDConnectService();
-        oidc.OidcProvider = new LearningLayersOIDCProvider();
+        oidc.OidcProvider = new LearningLayersOidcProvider();
 #if UNITY_WSA
         oidc.RedirectURI = "i5:/";
 #else

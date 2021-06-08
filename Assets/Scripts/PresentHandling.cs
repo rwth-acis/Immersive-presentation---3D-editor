@@ -1,5 +1,6 @@
 ﻿using i5.Toolkit.Core.ModelImporters;
 using i5.Toolkit.Core.ServiceCore;
+using i5;
 using ImmersivePresentation;
 using Microsoft.Azure.SpatialAnchors.Unity;
 using Microsoft.MixedReality.Toolkit;
@@ -121,7 +122,8 @@ public class PresentHandling : MonoBehaviour
         {
             Element3D curElement = openPresentation.stages[pStageIndex].scene.elements[i];
 #if UNITY_ANDROID
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            // LLUPD GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
@@ -165,7 +167,8 @@ public class PresentHandling : MonoBehaviour
         {
             Element3D curElement = openPresentation.stages[pStageIndex].handout.elements[i];
 #if UNITY_ANDROID
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            // LLUPD GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
