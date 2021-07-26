@@ -723,6 +723,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DebugWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 4679913627488335819, guid: fed1d36241b693742952041668cfd4c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4679913628774560306, guid: fed1d36241b693742952041668cfd4c7,
         type: 3}
       propertyPath: m_textInfo.lineCount

@@ -123,7 +123,7 @@ public class PresentHandling : MonoBehaviour
             Element3D curElement = openPresentation.stages[pStageIndex].scene.elements[i];
 #if UNITY_ANDROID
             // LLUPD GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/')); //worked on ANDROID
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);

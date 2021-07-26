@@ -173,7 +173,22 @@ public class EditorSceneHandler : MonoBehaviour
 #if UNITY_ANDROID
             // LLUPD GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
+            //string debug_help = @"C:\Users\lukas\AppData\LocalLow\LukasLiss\ImPres\ImPres3D\presentation\3DMedia\Scene\Mond.obj";
+            //print((StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/')).Replace('/', '\\'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync((StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/')).Replace('/', '\\'));
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("https://people.sc.fsu.edu/~jburkardt/data/obj/airboat.obj"); //works
+            //if (System.IO.File.Exists("C:\\Users\\lukas\\OneDrive\\Dokumente\\Arbeit_i5_HiWi\\Mond.obj"))
+            //{
+            //    print("File Exist");
+            //}
+            //else
+            //{
+            //    print("File NOT Exist");
+            //}
             
+            //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("C:\\Users\\lukas\\OneDrive\\Dokumente\\Arbeit_i5_HiWi\\Mond.obj");
+        
+
 #else
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
 #endif
