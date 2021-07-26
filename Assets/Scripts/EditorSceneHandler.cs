@@ -23,6 +23,10 @@ public class EditorSceneHandler : MonoBehaviour
         }
     }
 
+    public GameObject canvas;
+    public Renderer canvasRenderer;
+    public Material backupMaterial;
+
     /// <summary>
     /// The Gameobject that serves as the anchor for the scene
     /// </summary>
@@ -84,7 +88,8 @@ public class EditorSceneHandler : MonoBehaviour
             //Show error that no stage is given
             print("No stage in the opened presentation.");
             return;
-        } 
+        }
+        loadCanvas(StaticInformation.openStageIndex);
         create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         loadingVisualizer.SetActive(false);
     }
@@ -236,6 +241,7 @@ public class EditorSceneHandler : MonoBehaviour
             }
             //load obj from the new scene
             actualSceneGameObjList = new List<GameObject>();
+            loadCanvas(StaticInformation.openStageIndex);
             create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         }
         StaticInformation.removeDisabledObject = true;
@@ -255,6 +261,7 @@ public class EditorSceneHandler : MonoBehaviour
             }
             //load obj from the new scene
             actualSceneGameObjList = new List<GameObject>();
+            loadCanvas(StaticInformation.openStageIndex);
             create3DObjectsFromScene(StaticInformation.getOpenedStage().scene, actualSceneGameObjList);
         }
         StaticInformation.removeDisabledObject = true;
@@ -308,5 +315,23 @@ public class EditorSceneHandler : MonoBehaviour
         SceneManager.LoadScene("Scenes/WelcomeScene", LoadSceneMode.Additive);
         //SceneManager.SetActiveScene(SceneManager.GetSceneByName("WelcomeScene"));
         SceneManager.UnloadSceneAsync("EditorScene");
+    }
+
+    private void loadCanvas(int pStageIndex)
+    {
+        //the images as in the subfolder CanvasImg/[pStageIndex].png
+        string potentialCanvasImgPath = StaticInformation.tempPresDir + StaticInformation.tempSubCanvasImg + pStageIndex + ".png";
+
+        if (File.Exists(potentialCanvasImgPath))
+        {
+            var bytes = System.IO.File.ReadAllBytes(potentialCanvasImgPath);
+            var tex = new Texture2D(1, 1);
+            tex.LoadImage(bytes);
+            canvasRenderer.material.mainTexture = tex;
+        }
+        else
+        {
+            canvasRenderer.material = backupMaterial;
+        }
     }
 }
