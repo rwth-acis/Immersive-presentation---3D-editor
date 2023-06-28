@@ -11,21 +11,21 @@ Augmented Reality (AR) is used to present the 3D elements of the presentation.
 ## System Architecture
 The System consists of 3 parts.
 
-This repository contains the 2D Editor for the presentations.
+This repository contains the 3D Editor for the presentations.
 
-The 3D editor part can be found in [this repository](https://github.com/rwth-acis/Immersive-presentation---3D-editor).
+The 2D editor part can be found in [this repository](https://github.com/rwth-acis/Immersive-presentation---2D-editor).
 
-The backend that connects all parts can be found in [this repository](https://github.com/rwth-acis\Immersive-presentation---Backend-Coordinator).
+The backend that connects all parts can be found in [this repository](https://github.com/rwth-acis/Immersive-presentation---Backend-Coordinator).
 
 ## Getting started
 
 First, the backend should be up and running at a specified `<backend-addr>`.
-Then the two editors (the (2D editor](https://github.com/rwth-acis/Immersive-presentation---2D-editor) and the [3D editor](https://github.com/rwth-acis/Immersive-presentation---3D-editor) can be initialized.)
+Then the two editors (the [2D editor](https://github.com/rwth-acis/Immersive-presentation---2D-editor) and the [3D editor](https://github.com/rwth-acis/Immersive-presentation---3D-editor) can be initialized.)
 As all architecture parts are needed, the getting started section of all architecture parts, each covers the same complete setup process for all parts.
 
 ### Prerequisites
 A MySQL Database which can be accessed by the backend
-- MySQL database that uses the schema defined in the `<databasesetup.sql>` file in the [backend repository](https://github.com/rwth-acis\Immersive-presentation---Backend-Coordinator).
+- MySQL database that uses the schema defined in the `<databasesetup.sql>` file in the [backend repository](https://github.com/rwth-acis/Immersive-presentation---Backend-Coordinator).
 - User with the necessary login credentials that can be used by the backend to connect to the database.
 
 For the backend
