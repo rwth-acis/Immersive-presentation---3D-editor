@@ -10,58 +10,61 @@ PluginImporter:
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
   - first:
-      '': Any
+      : Any
     second:
       enabled: 0
       settings:
         Exclude Android: 0
         Exclude Editor: 0
         Exclude Linux: 0
-        Exclude Linux64: 0
+        Exclude Linux64: 1
         Exclude LinuxUniversal: 0
-        Exclude OSXUniversal: 0
+        Exclude OSXUniversal: 1
         Exclude WebGL: 0
         Exclude Win: 0
         Exclude Win64: 0
-        Exclude WindowsStoreApps: 1
+        Exclude WindowsStoreApps: 0
   - first:
-      '': Lumin
+      : Lumin
     second:
       enabled: 1
       settings: {}
   - first:
-      '': OSXIntel
+      : OSXIntel
     second:
       enabled: 1
       settings:
         CPU: AnyCPU
   - first:
-      '': OSXIntel64
+      : OSXIntel64
     second:
       enabled: 1
       settings:
         CPU: AnyCPU
   - first:
-      '': WP8
+      : WP8
     second:
       enabled: 1
       settings:
         CPU: AnyCPU
         DontProcess: False
-        PlaceholderPath:
+        PlaceholderPath: 
         SDK: AnySDK
         ScriptingBackend: Il2Cpp
   - first:
-      '': Web
+      : Web
     second:
       enabled: 1
       settings: {}
   - first:
-      '': WebStreamed
+      : WebStreamed
     second:
       enabled: 1
       settings: {}
@@ -72,7 +75,7 @@ PluginImporter:
       settings:
         CPU: ARMv7
   - first:
-      Any:
+      Any: 
     second:
       enabled: 1
       settings: {}
@@ -120,33 +123,33 @@ PluginImporter:
   - first:
       Standalone: Linux64
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: x86_64
+        CPU: None
   - first:
       Standalone: LinuxUniversal
     second:
       enabled: 1
       settings:
-        CPU:
+        CPU: 
   - first:
       Standalone: OSXUniversal
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win
     second:
       enabled: 1
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win64
     second:
       enabled: 1
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       WebGL: WebGL
     second:
@@ -155,13 +158,13 @@ PluginImporter:
   - first:
       Windows Store Apps: WindowsStoreApps
     second:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
-        DontProcess: False
-        PlaceholderPath:
+        DontProcess: false
+        PlaceholderPath: 
         SDK: AnySDK
-        ScriptingBackend: Il2Cpp
+        ScriptingBackend: DotNet
   - first:
       XboxOne: XboxOne
     second:
@@ -172,15 +175,15 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CompileFlags:
-        FrameworkDependencies:
+        CompileFlags: 
+        FrameworkDependencies: 
   - first:
       tvOS: tvOS
     second:
       enabled: 1
       settings:
-        CompileFlags:
-        FrameworkDependencies:
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+        CompileFlags: 
+        FrameworkDependencies: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,6 @@
+<linker>
+  <!-- Preserve classes in ImmersivePresentation so that Unity Code Stripping doesn't remove them -->
+  <assembly fullname="ImmersivePresentation">
+    <namespace fullname="ImmersivePresentation" preserve="all"/>
+  </assembly>
+</linker>
