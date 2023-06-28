@@ -434,7 +434,8 @@ PlayerSettings:
     - OpenVR
   - m_BuildTarget: Windows Store Apps
     m_Enabled: 1
-    m_Devices: []
+    m_Devices:
+    - WindowsMR
   - m_BuildTarget: Android
     m_Enabled: 1
     m_Devices: []
@@ -695,7 +696,8 @@ PlayerSettings:
   platformArchitecture: {}
   scriptingBackend: {}
   il2cppCompilerConfiguration: {}
-  managedStrippingLevel: {}
+  managedStrippingLevel:
+    Windows Store Apps: 1
   incrementalIl2cppBuild: {}
   allowUnsafeCode: 0
   additionalIl2CppArgs: 
@@ -712,7 +714,7 @@ PlayerSettings:
   metroCertificatePassword: 
   metroCertificateSubject: LukasLiss
   metroCertificateIssuer: LukasLiss
-  metroCertificateNotAfter: 00ca247b2db2d701
+  metroCertificateNotAfter: 00c6913391a2da01
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: ImPres-3D-Editor

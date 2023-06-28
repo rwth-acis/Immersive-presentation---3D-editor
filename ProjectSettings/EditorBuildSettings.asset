@@ -20,4 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PresentationScene.unity
     guid: f458347ba0ee14f42b26d12c1737bccc
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 2dcab14cb2e11fb48b878822964e5f77,
+      type: 2}
