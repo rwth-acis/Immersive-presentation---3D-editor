@@ -195,7 +195,7 @@ public class EditorSceneHandler : MonoBehaviour
         
 
 #else
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync(StaticInformation.tempPresDir + curElement.relativePath);
 #endif
             obj.transform.parent = anchor.transform;
             obj.transform.localPosition = new Vector3( (float)curElement.xPosition, (float)curElement.yPosition, (float)curElement.zPosition);

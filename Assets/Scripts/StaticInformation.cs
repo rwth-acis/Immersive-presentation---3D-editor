@@ -23,7 +23,7 @@ public static class StaticInformation
 #if UNITY_ANDROID
     public const string tempDownloadSuffix = "/ImPres3D/downloads/";
 #else
-    public const string tempDownloadSuffix = "ImPres3D\\downloads\\";
+    public const string tempDownloadSuffix = "/ImPres3D/downloads/";
 #endif
     public static string tempDownloadDir
     {
@@ -36,7 +36,7 @@ public static class StaticInformation
 #if UNITY_ANDROID
     public const string tempSuffix = "/ImPres3D/presentation/";
 #else
-    public const string tempSuffix = "ImPres3D\\presentation\\";
+    public const string tempSuffix = "/ImPres3D/presentation/";
 #endif
     public static string tempPresDir
     {
@@ -49,38 +49,38 @@ public static class StaticInformation
 #if UNITY_ANDROID
     public const string tempSub2D = "2DMedia/";
 #else
-    public const string tempSub2D = "2DMedia\\";
+    public const string tempSub2D = "2DMedia/";
 #endif
 #if UNITY_ANDROID
     public const string tempSub3D = "3DMedia/";
 #else
-    public const string tempSub3D = "3DMedia\\";
+    public const string tempSub3D = "3DMedia/";
 #endif
 #if UNITY_ANDROID
     public const string tempSubSubScene = "Scene/";
 #else
-    public const string tempSubSubScene = "Scene\\";
+    public const string tempSubSubScene = "Scene/";
 #endif
 #if UNITY_ANDROID
     public const string tempSubSubHandout = "Handout/";
 #else
-    public const string tempSubSubHandout = "Handout\\";
+    public const string tempSubSubHandout = "Handout/";
 #endif
 
 #if UNITY_ANDROID
     public const string tempSaveSuffix = "/ImPres3D/save/";
 #else
-    public const string tempSaveSuffix = "ImPres3D\\save\\";
+    public const string tempSaveSuffix = "/ImPres3D/save/";
 #endif
 #if UNITY_ANDROID
     public const string tempSaveSuffixAndFilename = "/ImPres3D/save/presentation.pres";
 #else
-    public const string tempSaveSuffixAndFilename = "ImPres3D\\save\\presentation.pres";
+    public const string tempSaveSuffixAndFilename = "/ImPres3D/save/presentation.pres";
 #endif
 #if UNITY_ANDROID
     public const string tempSubCanvasImg = "/CanvasImg/";
 #else
-    public const string tempSubCanvasImg = "CanvasImg\\";
+    public const string tempSubCanvasImg = "/CanvasImg/";
 #endif
     public static string tempSaveDir
     {

@@ -57,8 +57,6 @@ public class PresentHandling : MonoBehaviour
 
     private JsonSerializerSettings jsonSettings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
 
-    public const string presentationJsonFilename = "presentation.json";
-
     public bool isOwner = false;
 
     public Renderer canvasRenderer;
@@ -126,7 +124,7 @@ public class PresentHandling : MonoBehaviour
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/')); //worked on ANDROID
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #else
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync(StaticInformation.tempPresDir + curElement.relativePath);
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #endif
             obj.transform.parent = anchor.transform;
@@ -171,7 +169,7 @@ public class PresentHandling : MonoBehaviour
             GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync("file://" + StaticInformation.tempPresDir + curElement.relativePath.Replace('\\', '/'));
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #else
-            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + curElement.relativePath);
+            GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportAsync(StaticInformation.tempPresDir + curElement.relativePath);
             //GameObject obj = await ServiceManager.GetService<ObjImporter>().ImportFromFileAsync(StaticInformation.tempPresDir + "/ImPres3D/presentation/3DMedia/Scene/sheep.obj");
 #endif
             obj.transform.parent = anchor.transform;
@@ -413,8 +411,7 @@ public class PresentHandling : MonoBehaviour
 
         //Deserialize json
         //*StaticInformation.openPresentation = dataSerializer.DeserializerJson(typeof(Presentation), tempPresDir + presentationJsonFilename) as Presentation;
-        openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + presentationJsonFilename), jsonSettings);
-
+        openPresentation = JsonConvert.DeserializeObject<Presentation>(File.ReadAllText(StaticInformation.tempPresDir + StaticInformation.presentationJsonFilename), jsonSettings);
         secondPartOfSetup();
     }
 
